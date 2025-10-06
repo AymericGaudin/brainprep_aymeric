@@ -1,0 +1,12 @@
+.. _versions:
+
+========
+Versions
+========
+
+Web-based documentation is available for versions listed below:
+
+
+* `dev documentation <https://AymericGaudin.github.io/brainprep_aymeric/dev>`_
+
+* `stable documentation <https://AymericGaudin.github.io/brainprep_aymeric/stable>`_
