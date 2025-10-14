@@ -107,9 +107,9 @@ Now let's perform the pre-processing on a brainprep container.
           mask_anat: None
         )
         runtime: Bunch(
-          start: '2025-10-06 09:28:24.476319'
-          end: '2025-10-06 09:28:24.476319'
-          execution_time: 3.0555555555555555e-09
+          start: '2025-10-14 07:28:38.826972'
+          end: '2025-10-14 07:28:38.826972'
+          execution_time: 2.5e-09
           brainprep_version: '1.0.0.dev'
           platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
           hostname: 'runnervmwhb2z'
@@ -123,7 +123,7 @@ Now let's perform the pre-processing on a brainprep container.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.274 seconds)
+   **Total running time of the script:** (0 minutes 0.251 seconds)
 
 **Estimated memory usage:**  233 MB
 
