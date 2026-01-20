@@ -136,12 +136,22 @@ Now let's generate the RST report.
           val: 1
         )
         runtime: Bunch(
-          start: '2025-10-14 07:28:41.062176'
-          end: '2025-10-14 07:28:41.062176'
-          execution_time: 2.5e-09
-          brainprep_version: '1.0.0.dev'
+          start: '2026-01-20 13:20:40.198450'
+          end: '2026-01-20 13:20:40.198450'
+          execution_time: 2.222222222222222e-09
+          brainprep_version: '2.0.0.dev'
           platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwhb2z'
+          hostname: 'runnervmmtnos'
+        )
+        config: Bunch(
+          verbose: True
+          dryrun: False
+          with_color: True
+          cat12_file: PosixPath('/opt/cat12/standalone/cat_standalone.sh')
+          spm12_dir: PosixPath('/opt/cat12')
+          matlab_dir: PosixPath('/opt/MCR-2017b/v93')
+          tpm_file: PosixPath('/opt/cat12/spm12_mcr/home/gaser/gaser/spm/spm12/tpm/TPM.nii')
+          darteltpm_file: PosixPath('/opt/cat12/spm12_mcr/home/gaser/gaser/spm/spm12/toolbox/cat12/templates_volumes/Template_1_IXI555_MNI152.nii')
         )
       )
     )
@@ -160,12 +170,22 @@ Now let's generate the RST report.
           val: 4
         )
         runtime: Bunch(
-          start: '2025-10-14 07:28:41.063888'
-          end: '2025-10-14 07:28:41.063888'
-          execution_time: 3.305555555555556e-08
-          brainprep_version: '1.0.0.dev'
+          start: '2026-01-20 13:20:40.204069'
+          end: '2026-01-20 13:20:40.204069'
+          execution_time: 1.2780555555555555e-06
+          brainprep_version: '2.0.0.dev'
           platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwhb2z'
+          hostname: 'runnervmmtnos'
+        )
+        config: Bunch(
+          verbose: True
+          dryrun: False
+          with_color: True
+          cat12_file: PosixPath('/opt/cat12/standalone/cat_standalone.sh')
+          spm12_dir: PosixPath('/opt/cat12')
+          matlab_dir: PosixPath('/opt/MCR-2017b/v93')
+          tpm_file: PosixPath('/opt/cat12/spm12_mcr/home/gaser/gaser/spm/spm12/tpm/TPM.nii')
+          darteltpm_file: PosixPath('/opt/cat12/spm12_mcr/home/gaser/gaser/spm/spm12/toolbox/cat12/templates_volumes/Template_1_IXI555_MNI152.nii')
         )
       )
       step2: Bunch(
@@ -178,12 +198,22 @@ Now let's generate the RST report.
           val2: 4
         )
         runtime: Bunch(
-          start: '2025-10-14 07:28:41.063978'
-          end: '2025-10-14 07:28:41.063978'
-          execution_time: 8.333333333333334e-10
-          brainprep_version: '1.0.0.dev'
+          start: '2026-01-20 13:20:40.208623'
+          end: '2026-01-20 13:20:40.208623'
+          execution_time: 2.5e-09
+          brainprep_version: '2.0.0.dev'
           platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwhb2z'
+          hostname: 'runnervmmtnos'
+        )
+        config: Bunch(
+          verbose: True
+          dryrun: False
+          with_color: True
+          cat12_file: PosixPath('/opt/cat12/standalone/cat_standalone.sh')
+          spm12_dir: PosixPath('/opt/cat12')
+          matlab_dir: PosixPath('/opt/MCR-2017b/v93')
+          tpm_file: PosixPath('/opt/cat12/spm12_mcr/home/gaser/gaser/spm/spm12/tpm/TPM.nii')
+          darteltpm_file: PosixPath('/opt/cat12/spm12_mcr/home/gaser/gaser/spm/spm12/toolbox/cat12/templates_volumes/Template_1_IXI555_MNI152.nii')
         )
       )
     )
@@ -194,9 +224,9 @@ Now let's generate the RST report.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.203 seconds)
+   **Total running time of the script:** (0 minutes 0.194 seconds)
 
-**Estimated memory usage:**  233 MB
+**Estimated memory usage:**  106 MB
 
 
 .. _sphx_glr_download_auto_examples_plot_rst_reporting.py:
