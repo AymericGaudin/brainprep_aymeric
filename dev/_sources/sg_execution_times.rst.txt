@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**05:36.765** total execution time for 9 files **from all galleries**:
+**00:16.410** total execution time for 8 files **from all galleries**:
 
 .. container::
 
@@ -32,30 +32,27 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_examples_plot_dmriprep.py` (``../examples/plot_dmriprep.py``)
-     - 03:36.397
-     - 914.2
-   * - :ref:`sphx_glr_auto_examples_plot_fmriprep.py` (``../examples/plot_fmriprep.py``)
-     - 01:53.660
-     - 294.7
-   * - :ref:`sphx_glr_auto_examples_plot_brain_parcellation.py` (``../examples/plot_brain_parcellation.py``)
-     - 00:03.016
-     - 126.7
-   * - :ref:`sphx_glr_auto_examples_plot_defacing.py` (``../examples/plot_defacing.py``)
-     - 00:01.160
-     - 114.6
    * - :ref:`sphx_glr_auto_examples_plot_quality_assurance.py` (``../examples/plot_quality_assurance.py``)
-     - 00:01.041
-     - 126.4
-   * - :ref:`sphx_glr_auto_examples_plot_html_reporting.py` (``../examples/plot_html_reporting.py``)
-     - 00:00.505
-     - 106.5
+     - 00:10.468
+     - 576.8
+   * - :ref:`sphx_glr_auto_examples_plot_brain_parcellation.py` (``../examples/plot_brain_parcellation.py``)
+     - 00:02.443
+     - 128.0
    * - :ref:`sphx_glr_auto_examples_plot_quasiraw.py` (``../examples/plot_quasiraw.py``)
-     - 00:00.427
-     - 106.1
+     - 00:01.035
+     - 150.3
+   * - :ref:`sphx_glr_auto_examples_plot_defacing.py` (``../examples/plot_defacing.py``)
+     - 00:00.936
+     - 116.2
+   * - :ref:`sphx_glr_auto_examples_plot_fmriprep.py` (``../examples/plot_fmriprep.py``)
+     - 00:00.497
+     - 107.6
    * - :ref:`sphx_glr_auto_examples_plot_vbm.py` (``../examples/plot_vbm.py``)
-     - 00:00.364
-     - 106.1
+     - 00:00.426
+     - 107.6
+   * - :ref:`sphx_glr_auto_examples_plot_html_reporting.py` (``../examples/plot_html_reporting.py``)
+     - 00:00.386
+     - 107.8
    * - :ref:`sphx_glr_auto_examples_plot_rst_reporting.py` (``../examples/plot_rst_reporting.py``)
-     - 00:00.194
-     - 106.1
+     - 00:00.218
+     - 107.6
