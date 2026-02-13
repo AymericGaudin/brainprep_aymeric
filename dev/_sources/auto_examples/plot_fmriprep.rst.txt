@@ -144,12 +144,12 @@ to actually run each step and generate results on disk.
           connectivity_files: [PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/figures/sub-01_ses-00_task-rest_run-01_space-MNI152NLin2009cAsym_atlas-schaefer200_desc-correlation_connectivity.tsv')]
         )
         runtime: Bunch(
-          start: '2026-02-12 15:40:15.152922'
-          end: '2026-02-12 15:40:15.152922'
-          execution_time: 5.5357777777777776e-05
+          start: '2026-02-13 14:18:28.949211'
+          end: '2026-02-13 14:18:28.949211'
+          execution_time: 5.770527777777778e-05
           brainprep_version: '2.0.0'
-          platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwffz4'
+          platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
+          hostname: 'runnervmjduv7'
         )
         config: Bunch(
           verbose: True
@@ -179,12 +179,12 @@ to actually run each step and generate results on disk.
           outputs: ([[[PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-T1w_desc-brain_mask.nii.gz'), PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz')], [PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-T1w_desc-preproc_bold.nii.gz'), PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz')], [(PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-fsnative_den-91k_bold.dtseries.nii'),), (PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-fsLR_den-91k_bold.dtseries.nii'),)], PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_desc-confounds_timeseries.tsv')]], PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01.html'))
         )
         runtime: Bunch(
-          start: '2026-02-12 15:40:15.157167'
-          end: '2026-02-12 15:40:15.157167'
-          execution_time: 5.244305555555555e-05
+          start: '2026-02-13 14:18:28.954600'
+          end: '2026-02-13 14:18:28.954600'
+          execution_time: 5.427583333333333e-05
           brainprep_version: '2.0.0'
-          platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwffz4'
+          platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
+          hostname: 'runnervmjduv7'
         )
         config: Bunch(
           verbose: True
@@ -223,12 +223,12 @@ to actually run each step and generate results on disk.
           outputs: PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/figures/sub-01_ses-00_task-rest_run-01_space-MNI152NLin2009cAsym_atlas-schaefer200_desc-correlation_connectivity.tsv')
         )
         runtime: Bunch(
-          start: '2026-02-12 15:40:15.350887'
-          end: '2026-02-12 15:40:15.350887'
-          execution_time: 7.972222222222222e-08
+          start: '2026-02-13 14:18:29.155431'
+          end: '2026-02-13 14:18:29.155431'
+          execution_time: 7.777777777777777e-08
           brainprep_version: '2.0.0'
-          platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwffz4'
+          platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
+          hostname: 'runnervmjduv7'
         )
         config: Bunch(
           verbose: True
@@ -322,7 +322,7 @@ Hub: `Neurospin Docker Hub <https://hub.docker.com/u/neurospin>`_.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.497 seconds)
+   **Total running time of the script:** (0 minutes 0.564 seconds)
 
 **Estimated memory usage:**  108 MB
 

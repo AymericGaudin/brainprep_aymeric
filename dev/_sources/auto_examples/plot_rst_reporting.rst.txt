@@ -136,12 +136,12 @@ Now let's generate the RST report.
           val: 1
         )
         runtime: Bunch(
-          start: '2026-02-12 15:40:14.076561'
-          end: '2026-02-12 15:40:14.076561'
-          execution_time: 1.9444444444444442e-09
+          start: '2026-02-13 14:18:27.597625'
+          end: '2026-02-13 14:18:27.597625'
+          execution_time: 2.222222222222222e-09
           brainprep_version: '2.0.0'
-          platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwffz4'
+          platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
+          hostname: 'runnervmjduv7'
         )
         config: Bunch(
           verbose: True
@@ -170,12 +170,12 @@ Now let's generate the RST report.
           val: 4
         )
         runtime: Bunch(
-          start: '2026-02-12 15:40:14.081416'
-          end: '2026-02-12 15:40:14.081416'
-          execution_time: 9.705555555555557e-07
+          start: '2026-02-13 14:18:27.604293'
+          end: '2026-02-13 14:18:27.604293'
+          execution_time: 1.3613888888888888e-06
           brainprep_version: '2.0.0'
-          platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwffz4'
+          platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
+          hostname: 'runnervmjduv7'
         )
         config: Bunch(
           verbose: True
@@ -198,12 +198,12 @@ Now let's generate the RST report.
           val2: 4
         )
         runtime: Bunch(
-          start: '2026-02-12 15:40:14.084885'
-          end: '2026-02-12 15:40:14.084885'
-          execution_time: 8.333333333333334e-10
+          start: '2026-02-13 14:18:27.609153'
+          end: '2026-02-13 14:18:27.609153'
+          execution_time: 1.111111111111111e-09
           brainprep_version: '2.0.0'
-          platform: 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmwffz4'
+          platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
+          hostname: 'runnervmjduv7'
         )
         config: Bunch(
           verbose: True
@@ -224,7 +224,7 @@ Now let's generate the RST report.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.218 seconds)
+   **Total running time of the script:** (0 minutes 0.278 seconds)
 
 **Estimated memory usage:**  108 MB
 

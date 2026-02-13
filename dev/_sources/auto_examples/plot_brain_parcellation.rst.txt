@@ -457,7 +457,7 @@ to actually run each step and generate results on disk.
     [title] - Subject Level Brain Parcellation done.
     [title] - Group Level Brain Parcellation...
     [info] - setting workspace directory: /tmp/brainprep-brainparc/derivatives/brain_parcellation/workspace
-    ['/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-02/ses-study2/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-02/ses-study1/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-01/ses-study2/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-01/ses-study1/run-01']
+    ['/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-02/ses-study1/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-02/ses-study2/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-01/ses-study1/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/subjects/sub-01/ses-study2/run-01']
     [command] - aparcstats2table --hemi lh --meas area --tablefile /tmp/brainprep-brainparc/derivatives/brain_parcellation/morphometry/aparc_ses-study1_hemi-lh_meas-area_stats.csv --delimiter comma --parcid-only --subjects sub-02_run-01 sub-01_run-01
     [command] - aparcstats2table --parc aparc.a2009s --hemi lh --meas area --tablefile /tmp/brainprep-brainparc/derivatives/brain_parcellation/morphometry/aparc2009s_ses-study1_hemi-lh_meas-area_stats.csv --delimiter comma --parcid-only --subjects sub-02_run-01 sub-01_run-01
     [info] - checking output: /tmp/brainprep-brainparc/derivatives/brain_parcellation/morphometry/aparc_ses-study1_hemi-lh_meas-area_stats.csv
@@ -607,7 +607,7 @@ to actually run each step and generate results on disk.
     [title] - Longitudinal Brain Parcellation done.
     [title] - Group Level Brain Parcellation...
     [info] - setting workspace directory: /tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/workspace
-    ['/tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/subjects/sub-02/ses-study2/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/subjects/sub-02/ses-study1/run-01']
+    ['/tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/subjects/sub-02/ses-study1/run-01', '/tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/subjects/sub-02/ses-study2/run-01']
     [command] - aparcstats2table --hemi lh --meas area --tablefile /tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/morphometry/aparc_ses-study1_hemi-lh_meas-area_stats.csv --delimiter comma --parcid-only --subjects sub-02_run-01
     [command] - aparcstats2table --parc aparc.a2009s --hemi lh --meas area --tablefile /tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/morphometry/aparc2009s_ses-study1_hemi-lh_meas-area_stats.csv --delimiter comma --parcid-only --subjects sub-02_run-01
     [info] - checking output: /tmp/brainprep-brainparc/derivatives/brain_parcellation/longitudinal/morphometry/aparc_ses-study1_hemi-lh_meas-area_stats.csv
@@ -941,7 +941,7 @@ Hub: `Neurospin Docker Hub <https://hub.docker.com/u/neurospin>`_.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.443 seconds)
+   **Total running time of the script:** (0 minutes 2.365 seconds)
 
 **Estimated memory usage:**  128 MB
 
