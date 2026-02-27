@@ -136,12 +136,12 @@ Now let's generate the RST report.
           val: 1
         )
         runtime: Bunch(
-          start: '2026-02-13 14:18:27.597625'
-          end: '2026-02-13 14:18:27.597625'
-          execution_time: 2.222222222222222e-09
+          start: '2026-02-27 15:51:20.141655'
+          end: '2026-02-27 15:51:20.141655'
+          execution_time: 1.6666666666666667e-09
           brainprep_version: '2.0.0'
           platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmjduv7'
+          hostname: 'runnervmnay03'
         )
         config: Bunch(
           verbose: True
@@ -170,12 +170,12 @@ Now let's generate the RST report.
           val: 4
         )
         runtime: Bunch(
-          start: '2026-02-13 14:18:27.604293'
-          end: '2026-02-13 14:18:27.604293'
-          execution_time: 1.3613888888888888e-06
+          start: '2026-02-27 15:51:20.146928'
+          end: '2026-02-27 15:51:20.146928'
+          execution_time: 8.377777777777777e-07
           brainprep_version: '2.0.0'
           platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmjduv7'
+          hostname: 'runnervmnay03'
         )
         config: Bunch(
           verbose: True
@@ -198,12 +198,12 @@ Now let's generate the RST report.
           val2: 4
         )
         runtime: Bunch(
-          start: '2026-02-13 14:18:27.609153'
-          end: '2026-02-13 14:18:27.609153'
-          execution_time: 1.111111111111111e-09
+          start: '2026-02-27 15:51:20.149920'
+          end: '2026-02-27 15:51:20.149920'
+          execution_time: 8.333333333333334e-10
           brainprep_version: '2.0.0'
           platform: 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39'
-          hostname: 'runnervmjduv7'
+          hostname: 'runnervmnay03'
         )
         config: Bunch(
           verbose: True
@@ -224,7 +224,7 @@ Now let's generate the RST report.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.278 seconds)
+   **Total running time of the script:** (0 minutes 0.246 seconds)
 
 **Estimated memory usage:**  108 MB
 
