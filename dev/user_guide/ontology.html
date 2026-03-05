@@ -372,6 +372,7 @@
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../modules/brainprep.interfaces.utils.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brainprep.interfaces.utils</span></code>: Utils functions.</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of brainprep.interfaces.utils: Utils functions.</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.interfaces.utils.anonfile.html">brainprep.interfaces.utils.anonfile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.interfaces.utils.copyfiles.html">brainprep.interfaces.utils.copyfiles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.interfaces.utils.maskdiff.html">brainprep.interfaces.utils.maskdiff</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.interfaces.utils.movedir.html">brainprep.interfaces.utils.movedir</a></li>
@@ -426,6 +427,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.utils.utils.check_run.html">brainprep.utils.utils.check_run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.utils.utils.coerce_to_list.html">brainprep.utils.utils.coerce_to_list</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.utils.utils.coerce_to_path.html">brainprep.utils.utils.coerce_to_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.utils.utils.find_first_occurrence.html">brainprep.utils.utils.find_first_occurrence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.utils.utils.find_stack_level.html">brainprep.utils.utils.find_stack_level</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.utils.utils.make_run_id.html">brainprep.utils.utils.make_run_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../modules/generated/brainprep.utils.utils.parse_bids_keys.html">brainprep.utils.utils.parse_bids_keys</a></li>
@@ -616,6 +618,15 @@ a comprehensive report of:
 └── dataset_description.json
 </pre></div>
 </div>
+<p>In a tool that relies on a non-typed ontology, multiple runs of the same
+modality may occur within a single session, which can lead to naming
+conflicts. In such cases, an additional <code class="docutils literal notranslate"><span class="pre">run-&lt;ID&gt;</span></code> subdirectory is created.
+When the run identifier is missing from the filename, or when several images
+of the same modality share the same run identifier, a deterministic five-digit
+identifier is generated from the filename using a UUID.
+This ensures stable and reproducible naming.
+To guarantee uniqueness of run identifiers within the session folder, we
+check for duplicates and issues a warning if a conflict is detected.</p>
 </section>
 </section>
 
