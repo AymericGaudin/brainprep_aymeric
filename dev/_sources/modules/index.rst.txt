@@ -16,11 +16,13 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
    brainprep.datasets.openms.rst
    brainprep.datasets.rst
    brainprep.datasets.utils.rst
+   brainprep.decorators.rst
    brainprep.interfaces.ants.rst
    brainprep.interfaces.cat12.rst
    brainprep.interfaces.fmriprep.rst
    brainprep.interfaces.freesurfer.rst
    brainprep.interfaces.fsl.rst
+   brainprep.interfaces.morphologist.rst
    brainprep.interfaces.mriqc.rst
    brainprep.interfaces.plotting.rst
    brainprep.interfaces.qualcheck.rst
@@ -32,11 +34,14 @@ the :ref:`user guide <user_guide>` for more information and usage examples.
    brainprep.reporting.utils.rst
    brainprep.utils.bunch.rst
    brainprep.utils.color.rst
+   brainprep.utils.rst
    brainprep.utils.utils.rst
    brainprep.workflow.defacing.rst
    brainprep.workflow.fmriprep.rst
    brainprep.workflow.quality_assurance.rst
    brainprep.workflow.quasiraw.rst
+   brainprep.workflow.rst
    brainprep.workflow.sbm.rst
+   brainprep.workflow.sulcirec.rst
    brainprep.workflow.vbm.rst
    brainprep.wrappers.rst
