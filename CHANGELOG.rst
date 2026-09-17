@@ -1,10 +1,33 @@
 .. -*- mode: rst -*-
 
-2.1.0.dev
+
+2.2.0.dev
 =========
 
 HIGHLIGHTS
 ----------
+
+NEW
+---
+
+Fixes
+-----
+
+Enhancements
+------------
+
+Changes
+-------
+
+
+2.1.0
+=====
+
+HIGHLIGHTS
+----------
+
+This release optimizes existing or introduces new workflows. Please review
+the modifications below.
 
 NEW
 ---
@@ -40,7 +63,7 @@ Changes
 HIGHLIGHTS
 ----------
 
-his is a major release featuring significant changes to both the API and
+This is a major release featuring significant changes to both the API and
 CLI. Please review the modifications below.
 
 NEW
@@ -93,19 +116,18 @@ Changes
 0.0.2
 =====
 
-**Released September 2022**
-
 HIGHLIGHTS
 ----------
+
+This is the legacy release of brainprep.
+
+NEW
+---
 
 - :bdg-success:`API` This release includes different workflows to process
   antomical, functional and diffusion MR images.
 - :bdg-success:`API` All workflows are integrated in a dedicated container
   to enforce reproducible research.
-
-NEW
----
-
 - :bdg-success:`API` The following workflows are released:
 
 * fsreconall
@@ -125,13 +147,3 @@ NEW
 * tbss-preproc
 * tbss
 * dmriprep
-
-Fixes
------
-
-Enhancements
-------------
-
-Changes
--------
-
