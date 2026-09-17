@@ -14,7 +14,8 @@ import datetime
 import inspect
 import json
 import platform
-import subprocess
+import pprint
+import time
 from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import (
@@ -33,7 +34,6 @@ from .reporting import (
     trace_module_calls,
 )
 from .typing import (
-    Directory,
     File,
 )
 from .utils import (
@@ -41,6 +41,7 @@ from .utils import (
     coerce_to_list,
     coerce_to_path,
     parse_bids_keys,
+    print_call,
     print_command,
     print_title,
 )
@@ -65,16 +66,6 @@ class Hook:
     ``before_call`` returns the inputs unchanged, and ``after_call`` returns
     the outputs unchanged.
 
-    Methods
-    -------
-    before_call(func, inputs)
-        Hook executed before the wrapped function is called.
-        Must return a dictionary of (possibly modified) inputs.
-
-    after_call(func, outputs)
-        Hook executed after the wrapped function returns.
-        Must return the (possibly modified) output value.
-
     Notes
     -----
     Subclasses may override one or both methods. If a method is not
@@ -87,14 +78,22 @@ class Hook:
             func: Callable,
             inputs: dict[str, Any],
         ) -> dict[str, Any]:
-        """Transform and inspect inputs before the function call."""
+        """
+        Hook executed before the wrapped function is called.
+        Transform and/or inspect inputs.
+        Must return a dictionary of (possibly modified) inputs.
+        """
         return inputs
 
     def after_call(
             self,
             outputs: Any,
         ) -> Any:
-        """Transform and inspect outputs after the function call."""
+        """
+        Hook executed after the wrapped function returns.
+        Transform and/or inspect outputs.
+        Must return the (possibly modified) output value.
+        """
         return outputs
 
 
@@ -283,16 +282,17 @@ class CommandLineWrapperHook(Hook):
             )
 
         if not is_list_str(command) and not is_list_list_str(command):
-            raise ValueError(
+            msg = (
                 "Invalid command format: expected a list of strings or a "
-                "list of list of string for multiple commands."
+                "list of list of string for multiple commands.\n"
             )
+            msg += pprint.pformat(command)
+            raise ValueError(msg)
         commands = [command] if is_list_str(command) else command
+
         for cmd in commands:
             print_command(" ".join(cmd))
-
-        if not dryrun:
-            for cmd in commands:
+            if not dryrun:
                 run_command(cmd)
 
         for item in outputs or []:
@@ -602,13 +602,16 @@ class OutputdirHook(Hook):
     ----------
     plotting : bool
         If True, add a ``figures`` upper level directory in the output
-        directory. Default False.
+        directory.
+        Default False.
     quality_check : bool
         If True, add a ``quality_check`` upper level directory in the output
-        directory. Default False.
+        directory.
+        Default False.
     morphometry : bool
         If True, add a ``morphometry`` upper level directory in the output
-        directory. Default False.
+        directory.
+        Default False.
 
     Examples
     --------
@@ -706,8 +709,8 @@ class LogRuntimeHook(Hook):
     Log runtime metadata and input/output details of a function call.
 
     This hook uses an ``RSTReport`` instance to record metadata about the
-    execution of the decorated function. It captures the follwoing
-    informations:
+    execution of the decorated function. It captures the following
+    information:
 
     - the function's name, module, and docstring
     - the input arguments passed to the function
@@ -722,9 +725,19 @@ class LogRuntimeHook(Hook):
     Parameters
     ----------
     title : str | None
-        A title to display. Default None.
+        A title to display.
+        Default None.
+    clear : bool
+        If True, the `RSTReport` will be empty.
+        Default False.
     bunched : bool
-        Return a bunch object with a default 'outputs' key. Default True.
+        Return a bunch object with a default 'outputs' key.
+        Default True.
+    parent : bool
+        Indicates that at least one OutputdirHook parameter has been set to
+        True. When enabled, the parent output directory is included in the
+        interface logging mechanism.
+        Default False.
 
     Notes
     -----
@@ -778,10 +791,14 @@ class LogRuntimeHook(Hook):
     def __init__(
             self,
             title: str | None = None,
+            clear: bool = False,
             bunched: bool = True,
+            parent: bool = False,
         ) -> None:
         self.title = title
+        self.clear = clear
         self.bunched = bunched
+        self.parent = parent
 
     def before_call(
             self,
@@ -809,9 +826,10 @@ class LogRuntimeHook(Hook):
             comma-separated strings into lists.
         """
         report = RSTReport(
-            reloadable=True,
+            reloadable=not self.clear,
             increment=True,
         )
+
         if self.title is not None:
             print_title(f"{self.title}...")
         trace = trace_module_calls()
@@ -824,6 +842,52 @@ class LogRuntimeHook(Hook):
             report.register(self.identifier, "trace", trace)
         report.register(self.identifier, "inputs", Bunch(**inputs))
         self.start = datetime.datetime.now()
+
+        if func.__module__.startswith("brainprep.interfaces"):
+            cmd = [
+                "brainprep",
+                "interface",
+                func.__qualname__.replace("_", "-")
+            ]
+            for name, val in inputs.items():
+                if self.parent and name == "output_dir":
+                    val = val.parent
+                cmd.extend([
+                    f"-{name.replace('_', '-')}",
+                    (
+                        ",".join(
+                            "_".join(
+                                f"{key}-{val}"
+                                for key, val in item.items()
+                            )
+                            for item in val
+                        )
+                        if name == "entities" and isinstance(val, list)
+                        else "_".join(
+                            f"{key}-{val}"
+                            for key, val in val.items()
+                        )
+                        if name == "entities"
+                        else ",".join(
+                            str(obj)
+                            for obj in val
+                        )
+                        if isinstance(val, list)
+                        else str(val)
+                    ),
+                ])
+            config = DEFAULT_OPTIONS.copy()
+            config.update(
+                brainprep_options.get()
+            )
+            for name, val in config.items():
+                cmd.extend([
+                    f"-{name.replace('_', '-')}",
+                    str(val),
+                ])
+            print_command(" ".join(cmd))
+            report.register_command(" ".join(cmd))
+
         return inputs
 
     def after_call(
@@ -961,6 +1025,11 @@ class SaveRuntimeHook(Hook):
             )
         report_file.parent.mkdir(parents=True, exist_ok=True)
         report.save_as_rst(report_file)
+        report.save_commands_as_rst(
+            report_file.with_name(
+                report_file.name.replace("report_", "commands_")
+            )
+        )
         return outputs
 
 
@@ -1048,3 +1117,71 @@ def step(
     for plug in hooks:
         outputs = plug.after_call(outputs)
     return outputs
+
+
+class SignatureHook(Hook):
+    """
+    Decorator that prints which function is called, its arguments and
+    execution time.
+
+    Examples
+    --------
+    >>> from brainprep.decorators import step, SignatureHook
+
+    >>> @step(
+    ...     hooks=[SignatureHook()]
+    ... )
+    ... def add(a, b):
+    ...     '''Adds two numbers.'''
+    ...     return a + b
+
+    >>> result = add(3, 5) # doctest: +SKIP
+    """
+
+    def before_call(
+            self,
+            func: Callable,
+            inputs: dict[str, Any],
+        ) -> dict[str, Any]:
+        """
+        Display start information.
+
+        Parameters
+        ----------
+        func : Callable
+            The function to be decorated.
+        inputs : dict[str, Any]
+            Positional and keyword arguments passed to `func`.
+
+        Returns
+        -------
+        inputs : dict[str, Any]
+            Unchanged positional and keyword arguments passed to `func`.
+        """
+        self._start = time.perf_counter()
+        if inputs:
+            args_lines = ",\n".join(
+                f"    {k}={v!r}" for k, v in inputs.items()
+            )
+            signature = (
+                f"{func.__module__}.{func.__qualname__}(\n{args_lines},\n)"
+            )
+        else:
+            signature = f"{func.__module__}.{func.__qualname__}()"
+
+        print_call("_" * 80)
+        print_call(f"[call] {signature}")
+        return inputs
+
+    def after_call(
+            self,
+            outputs: Any,
+        ) -> Any:
+        """
+        Display end information.
+        """
+        end = time.perf_counter()
+        duration = end - self._start
+        msg = f"{duration:.2f}s, {duration / 60:.2f}min"
+        print_call("_" * max(0, 80 - len(msg)) + msg)
+        return outputs

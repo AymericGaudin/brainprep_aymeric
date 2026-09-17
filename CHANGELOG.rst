@@ -1,6 +1,7 @@
 .. -*- mode: rst -*-
 
-2.1.0.dev
+
+2.2.0.dev
 =========
 
 HIGHLIGHTS
@@ -8,10 +9,6 @@ HIGHLIGHTS
 
 NEW
 ---
-
-- :bdg-success:`Enhancement` Add the dmriprep workflow.
-- :bdg-success:`Enhancement` Add the tbss workflow.
-- :bdg-success:`Enhancement` Add the mrophologist workflow.
 
 Fixes
 -----
@@ -23,22 +20,59 @@ Changes
 -------
 
 
+2.1.0
+=====
+
+HIGHLIGHTS
+----------
+
+This release optimizes existing or introduces new workflows. Please review
+the modifications below.
+
+NEW
+---
+
+- :bdg-success:`Enhancement` Add the dmriprep workflow.
+- :bdg-success:`Enhancement` Add the morphologist workflow.
+
+Fixes
+-----
+
+- :bdg-danger:`Deprecation` Fix the containers that are using `mri_synthstrip`.
+- :bdg-danger:`Deprecation` The run mapping file has been moved to avoid
+  conflicts with FreeSurfer.
+
+Enhancements
+------------
+
+- :bdg-success:`Enhancement` Add signature hook.
+- :bdg-success:`Enhancement` Add live comand line monitoring support.
+- :bdg-success:`Enhancement` Support multi-modality in Quasi-Raw workflow.
+- :bdg-success:`Enhancement` Add `quick` mode in Quasi-Raw workflow.
+- :bdg-success:`Enhancement` Support multi-modality in Deface workflow.
+
+Changes
+-------
+
+- :bdg-danger:`Deprecation` Optimize the Quasi-Raw workflow steps.
+
+
 2.0.0
 =====
 
 HIGHLIGHTS
 ----------
 
-his is a major release featuring significant changes to both the API and
+This is a major release featuring significant changes to both the API and
 CLI. Please review the modifications below.
 
 NEW
 ---
 
 - :bdg-success:`Doc` Create doc with `furo <https://github.com/pradyunsg/furo>`_.
-- :bdg-success:`Enhancement` Worflows generate a report file.
+- :bdg-success:`Enhancement` Workflows generate a report file.
 - :bdg-success:`Enhancement` Anonymize workflow outputs.
-- :bdg-success:`Enhancement` Worflows generate BIDS-compliant organization.
+- :bdg-success:`Enhancement` workflows generate BIDS-compliant organization.
 - :bdg-success:`Enhancement` New workflows can generate HTML reporting.
 - :bdg-success:`Datasets` Toy datasets have been added to test the module.
 - :bdg-success:`Enhancement` Quasi-RAW preprocessing compute the brain mask
@@ -82,19 +116,18 @@ Changes
 0.0.2
 =====
 
-**Released September 2022**
-
 HIGHLIGHTS
 ----------
+
+This is the legacy release of brainprep.
+
+NEW
+---
 
 - :bdg-success:`API` This release includes different workflows to process
   antomical, functional and diffusion MR images.
 - :bdg-success:`API` All workflows are integrated in a dedicated container
   to enforce reproducible research.
-
-NEW
----
-
 - :bdg-success:`API` The following workflows are released:
 
 * fsreconall
@@ -114,13 +147,3 @@ NEW
 * tbss-preproc
 * tbss
 * dmriprep
-
-Fixes
------
-
-Enhancements
-------------
-
-Changes
--------
-

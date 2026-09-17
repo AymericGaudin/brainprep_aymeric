@@ -22,13 +22,17 @@ from collections.abc import Callable
 
 import fire
 
+import brainprep.interfaces as interfaces
 import brainprep.workflow as wf
 from brainprep.config import DEFAULT_OPTIONS
+from brainprep.utils import coerce_to_list
 
 
 def make_wrapped(
         fn: Callable,
-        is_vbm: bool = False) -> Callable:
+        is_vbm: bool = False,
+        is_dmriprep: bool = False,
+        is_interface: bool = False) -> Callable:
     """
     Wrap a workflow function and extend its signature with global
     configuration parameters.
@@ -54,8 +58,18 @@ def make_wrapped(
        If ``False`` (default), VBM-specific configuration parameters
        such as ``cat12_file``, ``spm12_dir``, ``matlab_dir``,
        ``tpm_file``, and ``darteltpm_file`` are excluded from the
-       generated signature. If ``True``, all configuration parameters
+       generated signature. If ``True``, all these configuration parameters
        are included. Default False.
+    is_dmriprep : bool
+       Whether the wrapped function corresponds to a dMRIprep workflow.
+       If ``False`` (default), dMRIprep-specific configuration parameters
+       such as ``mni_2iso_file``, and ``geolab_atlas_dir`` are excluded from
+       the generated signature. If ``True``, all these configuration parameters
+       are included. Default False.
+    is_interface : bool
+       Whether the wrapped function corresponds to a brainprep interface.
+       If ``True``, the ``dryrun`` configuration parameters is excluded from
+       the generated signature. Default False.
 
     Returns
     -------
@@ -83,16 +97,53 @@ def make_wrapped(
             for key in DEFAULT_OPTIONS
             if key in kwargs
         }
+
+        sig = inspect.signature(fn)
+        args = list(args)
+        for idx, param in enumerate(sig.parameters.values()):
+            if param.name == "entities":
+                if param.kind in (
+                        param.POSITIONAL_ONLY,
+                        param.POSITIONAL_OR_KEYWORD):
+                    val = coerce_to_list(args[idx], list[str])
+                    if len(val) == 1:
+                        val = val[0]
+                    args[idx] = (
+                        [
+                            dict(
+                                item_text.split("-")
+                                for item_text in dict_text.split("_")
+                            )
+                            for dict_text in val
+                        ]
+                        if isinstance(val, list)
+                        else dict(
+                            item_text.split("-")
+                            for item_text in val.split("_")
+                        )
+                    )
+                break
+        args = tuple(args)
+
         with Config(**config_params):
             return fn(*args, **kwargs)
 
     sig = inspect.signature(fn)
     kwargs_in_keys = "kwargs" in sig.parameters
     params = list(sig.parameters.values())
+    if is_interface:
+        params = [
+            param
+            for param in params
+            if param.name != "dryrun"
+        ]
     for key, val in DEFAULT_OPTIONS.items():
-        if not is_vbm and key in (
+        if not is_interface and not is_vbm and key in (
                 "cat12_file", "spm12_dir", "matlab_dir", "tpm_file",
                 "darteltpm_file"):
+            continue
+        if not is_interface and not is_dmriprep and key in (
+                "mni_2iso_file", "geolab_atlas_dir"):
             continue
         param = inspect.Parameter(
             key,
@@ -149,7 +200,21 @@ def main():
         "group-level-vbm": wf.brainprep_group_vbm,
         "subject-level-fmriprep": wf.brainprep_fmriprep,
         "group-level-fmriprep": wf.brainprep_group_fmriprep,
+        "subject-level-sulcirec": wf.brainprep_sulcirec,
+        "group-level-sulcirec": wf.brainprep_group_sulcirec,
+        "subject-level-dmriprep": wf.brainprep_dmriprep,
+        "group-level-reporting": wf.brainprep_group_reporting,
     }
     for key, fn in commands.items():
-        commands[key] = make_wrapped(fn, is_vbm=key.endswith("vbm"))
+        commands[key] = make_wrapped(
+            fn,
+            is_vbm=key.endswith("vbm"),
+            is_dmriprep=key.endswith("dmriprep"),
+        )
+    for key, fn in inspect.getmembers(interfaces, inspect.isfunction):
+        key = key.replace("_", "-")
+        commands.setdefault("interface", {})[key] = make_wrapped(
+            fn,
+            is_interface=True,
+        )
     fire.Fire(commands)

@@ -22,6 +22,7 @@ from ..decorators import (
     CoerceparamsHook,
     LogRuntimeHook,
     SaveRuntimeHook,
+    SignatureHook,
     step,
 )
 from ..typing import (
@@ -31,7 +32,6 @@ from ..typing import (
 from ..utils import (
     Bunch,
     find_first_occurrence,
-    parse_bids_keys,
 )
 
 
@@ -42,19 +42,22 @@ from ..utils import (
             process="vbm",
             bids_file="t1_file",
             add_subjects=True,
-            container="neurospin/brainprep-vbm"
+            container="neurospin/brainprep-vbm",
         ),
         LogRuntimeHook(
-            title="Subject Level VBM"
+            title="Subject Level VBM",
+            clear=True,
         ),
         SaveRuntimeHook(),
+        SignatureHook(),
     ]
 )
 def brainprep_vbm(
         t1_file: File,
         output_dir: Directory,
         keep_intermediate: bool = False,
-        **kwargs: dict) -> Bunch:
+        **kwargs: dict,
+    ) -> Bunch:
     """
     Voxel-based morphometry (VBM) pre-processing.
 
@@ -69,7 +72,8 @@ def brainprep_vbm(
         Path to the output directory.
     keep_intermediate : bool
         If True, retains intermediate results (i.e., the workspace); useful
-        for debugging. Default False.
+        for debugging.
+        Default False.
     **kwargs : dict
         entities: dict
             Dictionary of parsed BIDS entities.
@@ -100,28 +104,26 @@ def brainprep_vbm(
             f"The T1w file '{t1_file}' is not BIDS-compliant."
         )
 
-    batch_file = interfaces.write_catbatch(
+    batch_file = interfaces.writebatch(
         [t1_file],
         output_dir.parent,
         [entities],
     )
-    gm_files, qc_files = interfaces.cat12vbm_wf(
+    gm_files, qc_files = interfaces.cat12vbm_workflow(
         [t1_file],
         batch_file,
         output_dir.parent,
         [entities],
     )
 
-    mapping = {
-        str(find_first_occurrence(output_dir, "derivatives")): "DERIVATIVES",
-    }
-    if "rawdata" in str(t1_file):
-        mapping.update({
-            str(find_first_occurrence(t1_file, "rawdata")): "RAWDATA",
-        })
     interfaces.anonfile(
         batch_file,
-        mapping,
+        find_first_occurrence(output_dir, "derivatives"),
+        (
+            find_first_occurrence(t1_file, "rawdata")
+            if "rawdata" in str(t1_file)
+            else None
+        ),
     )
 
     return Bunch(
@@ -139,14 +141,16 @@ def brainprep_vbm(
             bids_file="t1_files",
             add_subjects=True,
             longitudinal=True,
-            container="neurospin/brainprep-vbm"
+            container="neurospin/brainprep-vbm",
         ),
         LogRuntimeHook(
-            title="Longitudinal VBM"
+            title="Longitudinal VBM",
+            clear=True,
         ),
         SaveRuntimeHook(
             parent=True,
         ),
+        SignatureHook(),
     ]
 )
 def brainprep_longitudinal_vbm(
@@ -154,7 +158,8 @@ def brainprep_longitudinal_vbm(
         model: int,
         output_dir: Directory,
         keep_intermediate: bool = False,
-        **kwargs: dict) -> Bunch:
+        **kwargs: dict,
+    ) -> Bunch:
     """
     Longitudinal voxel based morphometry (VBM) pre-processing.
 
@@ -172,7 +177,8 @@ def brainprep_longitudinal_vbm(
         Path to the output directory.
     keep_intermediate : bool
         If True, retains intermediate results (i.e., the workspace); useful
-        for debugging. Default False.
+        for debugging.
+        Default False.
     **kwargs : dict
         entities: list[dict]
             Dictionaries of parsed BIDS entities.
@@ -204,29 +210,27 @@ def brainprep_longitudinal_vbm(
                 f"The T1w file '{path}' is not BIDS-compliant."
             )
 
-    batch_file = interfaces.write_catbatch(
+    batch_file = interfaces.writebatch(
         t1_files,
         output_dir.parent,
         entities,
         model_long=model,
     )
-    gm_files, qc_files = interfaces.cat12vbm_wf(
+    gm_files, qc_files = interfaces.cat12vbm_workflow(
         t1_files,
         batch_file,
         output_dir.parent,
         entities,
     )
 
-    mapping = {
-        str(find_first_occurrence(output_dir, "derivatives")): "DERIVATIVES",
-    }
-    if "rawdata" in str(t1_files[0]):
-        mapping.update({
-            str(find_first_occurrence(t1_files[0], "rawdata")): "RAWDATA",
-        })
     interfaces.anonfile(
         batch_file,
-        mapping,
+        find_first_occurrence(output_dir, "derivatives"),
+        (
+            find_first_occurrence(t1_files[0], "rawdata")
+            if "rawdata" in str(t1_files[0])
+            else None
+        ),
     )
 
     return Bunch(
@@ -241,12 +245,14 @@ def brainprep_longitudinal_vbm(
         CoerceparamsHook(),
         BidsHook(
             process="vbm",
-            container="neurospin/brainprep-vbm"
+            container="neurospin/brainprep-vbm",
         ),
         LogRuntimeHook(
-            title="Group Leve VBM"
+            title="Group Level VBM",
+            clear=True,
         ),
         SaveRuntimeHook(),
+        SignatureHook(),
     ]
 )
 def brainprep_group_vbm(
@@ -255,7 +261,8 @@ def brainprep_group_vbm(
         iqr_threshold: float = 4.5,
         correlation_threshold: float = 0.5,
         longitudinal: bool = False,
-        keep_intermediate: bool = False) -> Bunch:
+        keep_intermediate: bool = False,
+    ) -> Bunch:
     """
     Group-level VBM pre-processing.
 
@@ -287,16 +294,21 @@ def brainprep_group_vbm(
     output_dir : Directory
         Working directory containing all the subjects.
     ncr_threshold : float
-         Quality control threshold on the NCR scores. Default 4.5.
+        Quality control threshold on the NCR scores.
+        Default 4.5.
     iqr_threshold : float
-         Quality control threshold on the IQR scores. Default 4.5.
+        Quality control threshold on the IQR scores.
+        Default 4.5.
     correlation_threshold : float
-        Quality control threshold on the correlation score. Default 0.5.
+        Quality control threshold on the correlation score.
+        Default 0.5.
     longitudinal : bool
-        If True, consider the longitudinal data as inputs.  Default False.
+        If True, consider the longitudinal data as inputs.
+        Default False.
     keep_intermediate : bool
         If True, retains intermediate results (i.e., the workspace); useful
-        for debugging. Default False.
+        for debugging.
+        Default False.
 
     Returns
     -------
@@ -361,7 +373,7 @@ def brainprep_group_vbm(
         output_dir,
     )
 
-    correlations_file = interfaces.mean_correlation(
+    correlations_file = interfaces.meancorr(
         output_dir / "subjects" / "sub-*" / "ses-*" / "mri" / "wm*_T1w.nii",
         darteltpm_file,
         output_dir,

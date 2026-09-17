@@ -6,7 +6,8 @@
 # for details.
 ##########################################################################
 
-""" Provide a command line interface.
+"""
+Provide a command line interface to generate HOPLA configuration files.
 """
 
 import hashlib
@@ -48,24 +49,29 @@ def extract_braced_parameters(
         template: str,
     ) -> list[str]:
     """
-    Extract parameter names enclosed in curly braces excluding 'outdir' and
-    'description'.
+    Extract parameter names from a command-line template.
+
+    This function scans a given command-line template string and identifies all
+    parameter placeholders enclosed in curly braces, except for 'mod_names',
+    'outdir' and 'fsdir'.
 
     Parameters
     ----------
     template : str
-        A command-line template containing placeholders like {T1w}.
+        A command-line template containing placeholders in the format
+       {param_name}. Example: "command -i {input} -o {output}"
 
     Returns
     -------
-    list of str
-        The parameter names found inside curly braces, in order of appearance.
+    list[str]
+        A list of parameter names found in the template.
+        Example: ["input", "output"]
     """
     params = re.findall(r"{([^}]+)}", template)
     return [
         param
         for param in params
-        if param != "outdir"
+        if param not in ("mod_names", "outdir", "fsdir")
     ]
 
 
@@ -74,19 +80,24 @@ def hash_file(
         chunk_size: int = 8192,
     ) -> str:
     """
-    Compute a SHA-256 hash of a file in streaming mode.
+    Compute the SHA-256 hash of a file in streaming mode.
+
+    This function reads a file in chunks to compute its SHA-256 hash, making
+    it suitable for large files that cannot be loaded entirely into memory.
 
     Parameters
     ----------
     path : Path
-        Path to the file.
+        The path to the file for which the SHA-256 hash is to be computed.
     chunk_size : int
-        Size of chunks to read at a time.
+        The size of each chunk to read from the file at a time, in bytes.
+        This parameter controls the trade-off between memory usage and I/O
+        efficiency.
 
     Returns
     -------
     str
-        Hexadecimal SHA-256 hash.
+        The hexadecimal representation of the SHA-256 hash of the file.
     """
     sha = hashlib.sha256()
     with path.open("rb") as of:
@@ -102,12 +113,12 @@ def parse_bids(
     """
     Parse a BIDS dataset and collect paths to common MRI modalities.
 
-    This function walks through a BIDS-organized directory structure and
-    extracts the file paths for the most frequently used MRI modalities:
-    T1-weighted (T1w), T2-weighted (T2w), FLAIR, diffusion-weighted imaging
-    (DWI), and functional BOLD fMRI. It supports both compressed and
-    uncompressed NIfTI files (`.nii` and `.nii.gz`) and handles datasets
-    where some modalities or subdirectories may be missing.
+    This function traverses a BIDS-organized directory structure to extract
+    file paths for frequently used MRI modalities: T1-weighted (T1w),
+    T2-weighted (T2w), FLAIR, diffusion-weighted imaging (DWI), and functional
+    BOLD fMRI. It supports both compressed and uncompressed NIfTI files
+    (`.nii` and `.nii.gz`) and handles datasets where some modalities or
+    subdirectories may be missing.
 
     The function assumes a standard BIDS layout:
 
@@ -125,17 +136,17 @@ def parse_bids(
     Parameters
     ----------
     root : str or Path
-        Path to a rawdata BIDS dataset.
+        Path to the root directory of a rawdata BIDS dataset.
     with_hash : bool
-        Compute a SHA-256 hash of each parsed file.
+        If True, compute a SHA-256 hash of each parsed file.
         Default True.
 
     Returns
     -------
     data : dict[str, pd.DataFrame]
-        Dictionary mapping each modality name (``"T1w"``, ``"T2w"``,
-        ``"FLAIR"``, ``"dwi"``, ``"bold"``) to a DataFrame containing one row
-        per discovered file for that modality. Each table includes:
+        Dictionary mapping each modality name ("T1w", "T2w", "FLAIR", "dwi",
+        "bold") to a DataFrame containing one row per discovered file for
+        that modality. Each DataFrame includes:
 
         - ``subject`` : str
           Subject identifier without the ``sub-`` prefix.
@@ -193,9 +204,11 @@ def parse_bids(
                         ),
                     }
                     record.setdefault(modality, []).append(row)
-    print(f"- modalities: {list(record.keys())}")
 
-    return {key: pd.DataFrame(val) for key, val in record.items()}
+    return {
+        key: pd.DataFrame(val)
+        for key, val in record.items()
+    }
 
 
 def organize_bids_tab(
@@ -203,18 +216,18 @@ def organize_bids_tab(
         with_hash: bool = True,
     ) -> dict[str, pd.DataFrame]:
     """
-    Organize a pre-parsed BIDS dataset .
+    Organize a pre-parsed BIDS dataset.
 
-    This function walks through a BIDS-parsed table and extracts the file
+    This function processes a pre-parsed BIDS dataset table and extracts file
     paths for the most frequently used MRI modalities: T1-weighted (T1w),
     T2-weighted (T2w), FLAIR, diffusion-weighted imaging (DWI), and
     functional BOLD fMRI.
 
     Parameters
     ----------
-    tab_file : str or Path
-        Path to a pre-parsed rawdata BIDS dataset (as a TSV file). The table
-        includes:
+    tab_file : str | Path
+        Path to a pre-parsed rawdata BIDS dataset in TSV format. The table
+        should include the followig columns:
 
         - ``sub`` : str
           Subject identifier without the ``sub-`` prefix.
@@ -227,15 +240,15 @@ def organize_bids_tab(
         - ``md5sum`` : str
           MD5 hash of the file.
     with_hash : bool
-        Collect a MD5 hash of each pre-parsed file.
+        If True, collect an MD5 hash of each pre-parsed file.
         Default True.
 
     Returns
     -------
     data : dict[str, pd.DataFrame]
-        Dictionary mapping each modality name (``"T1w"``, ``"T2w"``,
-        ``"FLAIR"``, ``"dwi"``, ``"bold"``) to a DataFrame containing one row
-        per discovered file for that modality. Each table includes:
+        Dictionary mapping each modality name ("T1w", "T2w", "FLAIR", "dwi",
+        "bold") to a DataFrame containing one row per discovered file for
+        that modality. Each DataFrame includes:
 
         - ``subject`` : str
           Subject identifier without the ``sub-`` prefix.
@@ -261,6 +274,7 @@ def organize_bids_tab(
     print(banner)
 
     df = pd.read_csv(tab_file, sep="\t", dtype=str)
+    rawdata_path = str(Path(tab_file).parent)
 
     record = {}
     for _, row in df.iterrows():
@@ -268,15 +282,56 @@ def organize_bids_tab(
         row = {
             "subject": row["sub"],
             "session": row["ses"],
-            modality: row["path"],
+            modality: row["path"].replace("./", f"{rawdata_path}/"),
             f"{modality}_md5_hash": (
                 row["md5sum"] if with_hash else None
             ),
         }
         record.setdefault(modality, []).append(row)
-    print(f"- modalities: {list(record.keys())}")
 
     return {key: pd.DataFrame(val) for key, val in record.items()}
+
+
+def concatenate_modalities(
+        dfs: dict[str, pd.DataFrame],
+    ) -> pd.DataFrame:
+    """
+    Concatenate modalities for each subject.
+
+    This function takes a dictionary of DataFrames, each containing 'subject',
+    'session', and '<modality>' columns. It concatenates the 'modality' values
+    for each subject, counts the number of modalities, and returns a DataFrame
+    with the concatenated modalities and their counts.
+
+    Parameters
+    ----------
+    dfs : dict[str, pd.DataFrame]
+        A dictionary where keys are modality names and values are DataFrames
+        containing 'subject', 'session', and '<modality>' columns.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame with columns 'subject', 'mod', and 'count'. The 'mod'
+        column contains concatenated modality values for each subject, and
+        the 'count' column contains the number of modalities for each subject.
+    """
+    concatenated_dfs = [
+        df.assign(mod=df[mod])
+        for mod, df in dfs.items()
+
+    ]
+
+    combined_df = pd.concat(concatenated_dfs)
+
+    all_df = combined_df.groupby(["subject"]).agg({
+        "mod": lambda x: ", ".join(x)
+    }).reset_index()
+
+    all_df["count"] = all_df["mod"].str.count(",")
+    all_df["count"] += 1
+
+    return all_df
 
 
 def organize_longitudinal(
@@ -284,32 +339,42 @@ def organize_longitudinal(
         htype: str = "sha256",
     ) -> dict[str, pd.DataFrame]:
     """
-    Organize BIDS modality tables into one longitudinal table per modality,
-    expanding multiple files into separate columns (e.g., T1w-1, T1w-2).
+    Organize BIDS modality tables into one longitudinal table per modality.
+
+    This function reorganizes the input dictionary of modality tables into a
+    longitudinal format, expanding multiple files into separate columns
+    (e.g., T1w-1, T1w-2).
 
     Parameters
     ----------
     data : dict[str, pd.DataFrame]
-        Dictionary where keys are modality names (e.g., "T1w", "dwi", "bold")
+        Dictionary where keys are modality names (e.g., "T1w", "T2w", "FLAIR")
         and values are DataFrames containing:
-            - "subject"
-            - "session"
-            - "<modality>"
-            - "<modality>_<htype>_hash"
+        - "subject": Subject identifier without the ``sub-`` prefix.
+        - "session": Session identifier without the ``ses-`` prefix.
+        - "<modality>": File path to the corresponding NIfTI image.
+        - "<modality>_<htype>_hash": Hash of the file.
     htype : str
-        Hash type. Default 'sha256'.
+        The type of hash used.
+        Default 'sha256'.
 
     Returns
     -------
     data : dict[str, pd.DataFrame]
-        One DataFrame per modality, with one row per subject/session.
-        If multiple files exist for a modality, they are expanded into
-        columns named "<modality>-1", "<modality>-2", ... and
-        "<modality>_<htype>_hash-1", "<modality>_<htype>_hash-2", ...
+        A dictionary with one DataFrame per modality, where each DataFrame has
+        one row per subject/session. If multiple files exist for a modality,
+        they are expanded into columns named "<modality>-1", "<modality>-2",
+        ... and "<modality>_<htype>_hash-1", "<modality>_<htype>_hash-2", ...
+
+    Raises
+    ------
+    ValueError
+        If the input DataFrame does not contain one row per unique
+        subject/session pair.
     """
     banner = r"""
     +----------------------------------+
-    |   Organize longitudianl data...  |
+    |   Organize longitudinal data...  |
     +----------------------------------+
     """
     print(banner)
@@ -318,53 +383,63 @@ def organize_longitudinal(
     for modality, df in data.items():
 
         df = df.sort_values(["subject", "session"]).reset_index(drop=True)
-        df["idx"] = df.groupby(["subject", "session"]).cumcount() + 1
-        files_wide = df.pivot_table(
-            index=["subject", "session"],
-            columns="idx",
-            values=modality,
-            aggfunc="first"
-        )
-        hashes_wide = df.pivot_table(
-            index=["subject", "session"],
-            columns="idx",
+        try:
+            files_wide = df.pivot(
+                index="subject",
+                columns="session",
+                values=modality,
+            )
+        except Exception as exc:
+            print(f"- {modality}:")
+            df_ = (
+                df.groupby(["subject", "session"])
+                .size()
+                .reset_index(
+                    name="total"
+                )
+            )
+            print(df_[df_["total"] > 1])
+            raise ValueError(
+                "Can't pivot. Expect one row per subject/session pair. See "
+                "descrition above."
+            ) from exc
+        hashes_wide = df.pivot(
+            index="subject",
+            columns="session",
             values=f"{modality}_{htype}_hash",
-            aggfunc="first"
         )
-
         files_wide.columns = [
-            f"{modality}-{idx}"
-            for idx in files_wide.columns
+            f"{modality}-{ses}"
+            for ses in files_wide.columns
         ]
         hashes_wide.columns = [
-            f"{modality}_{htype}_hash-{idx}"
-            for idx in hashes_wide.columns
+            f"{modality}_{htype}_hash-{ses}"
+            for ses in hashes_wide.columns
         ]
-
         merged = pd.concat([files_wide, hashes_wide], axis=1).reset_index()
         merged = merged[[
             "subject",
             *sorted([
                 name
                 for name in merged.columns
-                if name not in ("subject", "session")
+                if name != "subject"
             ])
         ]]
 
         record[modality] = merged
-
-    print(f"- longitudinal dataset: {1 if len(record) > 0 else 0}")
 
     return record
 
 
 def collect_config(
         infra: str,
+        modality: str,
         bind_dir: str | Path,
         config_file: str | Path,
         dfs: dict[str, pd.DataFrame],
         long_dfs: dict[str, pd.DataFrame],
-        worflow_id: str,
+        timepoints: list[str],
+        workflow_id: str,
         workflow_parameters: str,
         workflow_resource: dict,
         image_dir: str | Path,
@@ -375,33 +450,48 @@ def collect_config(
         freesurfer_license_file: str | Path,
     ) -> None:
     """
+    Generate a HOPLA configuration file.
+
+    This function processes modality data for generating a configuration file,
+    handling different types of data (longitudinal, multi-target,
+    single-target). It prepares the data by selecting relevant columns,
+    cleaning the DataFrames, and merging them based on specified parameters.
+    The function then formats workflow parameters and generates the final
+    configuration file.
+
     Parameters
     ----------
     infra : str
         Infrastructure identifier.
+    modality : str
+        The current modality being processed.
     bind_dir : str | Path
         Directory containing the data to be bound into the Docker
         or Apptainer environment.
     config_file : str | Path
         Template configuration file.
     dfs : dict[str, pd.DataFrame]
-        Dictionary mapping each modality name (``"T1w"``, ``"T2w"``,
-        ``"FLAIR"``, ``"dwi"``, ``"bold"``) to a DataFrame containing one row
-        per discovered file for that modality.
+        A dictionary mapping each modality name ("T1w", "T2w", "FLAIR", "dwi",
+        "bold") to a DataFrame containing one row per discovered file for that
+        modality.
     long_dfs : dict[str, pd.DataFrame]
-        One DataFrame per modality, with one row per subject/session.
-        If multiple files exist for a modality, they are expanded into
-        columns named "<modality>-1", "<modality>-2".
-    worflow_id : str
-        The workflow dcalred name in brainprep CLI.
+        A dictionary with one DataFrame per modality, where each DataFrame has
+        one row per subject/session. If multiple files exist for a modality,
+        they are expanded into columns named "<modality>-1",
+        "<modality>-2", ...
+    timepoints : list[str]
+        The timepoints to consider in the longitudinal analysis.
+        Default None.
+    workflow_id : str
+        The workflow declared name in brainprep CLI.
     workflow_parameters : str
         A command-line template containing placeholders like {T1w}.
     workflow_resource : dict
         Workflow configurations.
     image_dir: str | Path
-        Path to the apptainer or docker images location.
+        Path to the Apptainer or Docker images location.
     image_version: str
-        The image version.
+        The Apptainer or Docker image version.
     working_dir : str | Path
         Directory where the generated instructions will be written.
     partition : str
@@ -409,7 +499,7 @@ def collect_config(
     project_id : str
         Name  of the project to use.
     freesurfer_license_file : str | Path
-        Path to the FreeSurfer license file required for container execution
+        Path to the FreeSurfer license file required for container execution.
     """
     banner = r"""
     +----------------------------------+
@@ -418,60 +508,110 @@ def collect_config(
     """
     print(banner)
 
-    workflow_name = worflow_id.split("-")[-1]
+    workflow_name = workflow_id.split("-")[-1]
     if workflow_name == "qa":
         workflow_name = "quality_assurance"
-    workflow_type = worflow_id.split("-")[0]
+    workflow_type = workflow_id.split("-")[0]
+    is_longitudinal = (workflow_type == "longitudinal")
+    print(f"- modality: {modality}")
     print(f"- name: {workflow_name}")
     print(f"- type: {workflow_type}")
     print(f"- parameters: {workflow_parameters}")
     output_dir = (
         working_dir /
-        f"{workflow_name}_{workflow_type}"
+        f"{workflow_name}_{workflow_type}_{modality}"
     )
 
     params = extract_braced_parameters(workflow_parameters)
-    print(f"- varaibles: {params}")
+    print(f"- variables: {params}")
 
     record = []
     for key in params:
-        is_optional = key[0] == "!"
-        is_missing = True
-        key = key[1:] if key[0] == "!" else key
-        if key.endswith("s") and key[:-1] in long_dfs:
-            record.append(long_dfs[key[:-1]].dropna())
-            multi_params = [
-                f"{{{key_}}}"
-                for key_ in sorted(
-                    set(record[-1].columns) - {"subject", "session"}
-                )
-            ]
-            workflow_parameters = workflow_parameters.replace(
-                f"{{!{key}}}" if is_optional else f"{{{key}}}",
-                ",".join(multi_params),
-            )
-            is_missing = False
-        elif key in dfs:
-            record.append(dfs[key])
-            is_missing = False
-        if is_optional and is_missing:
-            workflow_parameters = workflow_parameters.replace(
-                f",{{!{key}}}",
-                "",
-            )
-            is_missing = False
-        if is_missing:
-            print(f"- missing data: {params}")
+        is_multi_targets = key[-1] == "s"
+        data = (
+            long_dfs
+            if is_longitudinal
+            else dfs
+        )
+        key_ = (
+            key[:-1]
+            if is_longitudinal or is_multi_targets
+            else key
+        )
+        if key_ not in data:
+            print(f"- missing data: {key_}")
+            print(f"- available data: {data.keys()}")
             return
+        mod_df = data[key_]
+        if is_longitudinal:
+            col_mod_names = [
+                f"{key_}-{tp}"
+                for tp in timepoints
+            ]
+            merge_on = [
+                "subject",
+            ]
+            workflow_parameters = workflow_parameters.format_map(
+                SafeDict({
+                    key: ",".join([
+                        f"{{{name}}}"
+                        for name in col_mod_names
+                    ])
+                })
+            )
+        elif is_multi_targets:
+            col_mod_names = [
+                key_
+            ]
+            merge_on = [
+                "subject",
+                "session",
+            ]
+            workflow_parameters = workflow_parameters.format_map(
+                SafeDict({
+                    key: f"{{{key_}}}",
+                })
+            )
+            mod_df = grouped_df = (
+                mod_df.groupby(merge_on)[key_]
+                .agg(lambda x: ", ".join(x))
+                .reset_index()
+            )
+        else:
+            col_mod_names = [
+                key_
+            ]
+            merge_on = (
+                ["subject", "session"]
+                if modality != "ALL"
+                else ["subject"]
+            )
+
+        mod_df = mod_df[
+            [
+                *merge_on,
+                *col_mod_names,
+            ]
+        ]
+        mod_df = mod_df.dropna()
+        record.append(mod_df)
     df = (
-        reduce(lambda left, right: pd.merge(
-            left, right, on="subject", how="inner"
-        ), record)
+        reduce(
+            lambda left, right: pd.merge(
+                left, right, on=merge_on, how="inner"
+            ),
+            record,
+        )
         if len(params) > 0
         else None
     )
+
     workflow_parameters = workflow_parameters.format_map(
-        SafeDict({"outdir": output_dir / "data"})
+        SafeDict({
+            "mod_names": ",".join(set(dfs.keys()) - {"mod"}),
+            "outdir": working_dir / "derivatives",
+            "fsdir": working_dir / "derivatives" / "sbm"
+        })
     )
     print(f"- edited parameters: {workflow_parameters}")
 
@@ -486,6 +626,7 @@ def collect_config(
     if infra == "slurm":
         image_parameters = (
             f"--cleanenv --home {home_dir} --bind {bind_dir} "
+            f"--bind {output_dir} "
         )
     else:
         image_parameters = ""
@@ -511,9 +652,9 @@ def collect_config(
     config_template = config_file.read_text()
     config_str = config_template.format(
         name=workflow_name,
-        operator="TO UPDATE",
+        operator="brainprepdesk support team",
         date=str(datetime.now().date()),
-        commands=f'"brainprep {workflow_name} {workflow_parameters}"',
+        commands=f'"brainprep {workflow_id} {workflow_parameters}"',
         parameters=image_parameters,
         cluster=infra,
         partition=partition,
@@ -555,13 +696,19 @@ def scan_configs(
         working_dir: str | Path,
         partition: str,
         freesurfer_license_file: str | Path,
+        timepoints: list[str] | None = None,
         with_hash: bool = False,
+        with_longitudinal: bool = True,
         allowed_workflows: list[str] | None = None,
     ) -> None:
     """
-    Two infrastructures are supported: ``ccc`` and ``slurm``.
-    To select one, use either ``<name>`` or ``<project>:<name>`` as the value
-    of the ``partition`` parameter.
+    Generate HOPLA configuration files for supported infrastructures.
+
+    This function generates configuration files for the specified
+    infrastructure, using either ``<name>`` or ``<project>:<name>`` as the
+    value of the ``partition`` parameter to select the infrastructure.
+    It parses a BIDS dataset, organizes the data, and generates configuration
+    files for specified workflows.
 
     Parameters
     ----------
@@ -577,13 +724,20 @@ def scan_configs(
         Name of the partition to use. Can be provided as ``<name>`` or
         ``<project>:<name>`` depending on the infrastructure.
     freesurfer_license_file : str | Path
-        Path to the FreeSurfer license file required for container execution
+        Path to the FreeSurfer license file required for container executions.
+    timepoints : list[str]
+        The timepoints to consider in the longitudinal analysis.
+        Default None.
     with_hash : bool
-        Compute a SHA-256 hash of each parsed file.
+        If True, compute a SHA-256 hash of each parsed file.
         Dafault False.
+    with_longitudinal : bool
+        If True, configure longitudinal workflows.
+        Default True.
     allowed_workflows : list[str] | None
         Optionally specify a subset of workflows to consider.
         If None, all available workflows will be used.
+        Default None.
     """
     root = Path(root)
     image_dir = Path(image_dir)
@@ -613,9 +767,9 @@ def scan_configs(
 
     # Parse root
     cache_files = list(root.glob("rawdata_v-*.tsv"))
+    selected = None
     if len(cache_files) == 0:
-        print("No cache files found. Parsing data.")
-        selected = None
+        print("No cache file. Parsing data.")
     else:
         print("Multiple cache files found:")
         for idx, path in enumerate(cache_files, 1):
@@ -628,54 +782,80 @@ def scan_configs(
             print(f"Selected: {selected}")
         else:
             print("No valid selection. Force parsing.")
-            selected = None
     if selected is None:
-        dfs = parse_bids(root=root, with_hash=with_hash)
+        dfs = parse_bids(
+            root=root,
+            with_hash=with_hash,
+        )
         htype = "sha256"
     else:
-        dfs = organize_bids_tab(tab_file=selected, with_hash=with_hash)
+        dfs = organize_bids_tab(
+            tab_file=selected,
+            with_hash=with_hash,
+        )
         htype = "md5"
-    long_dfs = organize_longitudinal(dfs, htype=htype)
+    dfs["mod"] = concatenate_modalities(dfs)
+    for mod, mod_df in dfs.items():
+        mod_df.to_csv(
+            working_dir / f"data_{mod}.tsv",
+            sep="\t",
+            index=False,
+        )
+        print(f"- {mod}:")
+        print(mod_df)
+
+    if with_longitudinal:
+        filtered_dfs = {
+            key: val
+            for key, val in dfs.items()
+            if key in set(dfs.keys()) - {"dwi", "bold", "mod"}
+        }
+        long_dfs = organize_longitudinal(filtered_dfs, htype=htype)
+    else:
+        long_dfs = {}
+    for mod, mod_df in long_dfs.items():
+        mod_df.to_csv(
+            working_dir / f"longdata_{mod}.tsv",
+            sep="\t",
+            index=False,
+        )
+        print(f"- {mod}:")
+        print(mod_df)
 
     # Scan workflows
-    workflows = workflow_resource["brainprep"]["workflow"]
     workflow_mapping = workflow_resource["brainprep"]["mapping"]
-    known_workflows = [
-        name
-        for key in dfs
-        for name in workflow_mapping.get(key, [])
-    ]
-    if allowed_workflows is None:
-        allowed_workflows = known_workflows
-    else:
-        if isinstance(allowed_workflows, str):
-            allowed_workflows = allowed_workflows.split(",")
-        unknown = set(allowed_workflows) - set(known_workflows)
-        if unknown:
-            raise ValueError(
-                f"Unknown workflow IDs: {', '.join(sorted(unknown))}. "
-                f"Valid workflows are: {', '.join(sorted(known_workflows))}"
+    for mod, workflow_list in workflow_mapping.items():
+        for workflow_pattern in workflow_list:
+            workflow_id, workflow_parameters = workflow_pattern.split(" ", 1)
+            if (
+                    allowed_workflows is not None and
+                    workflow_id not in allowed_workflows
+                ):
+                print(f"\n-- skip: {workflow_id} --")
+                continue
+            if timepoints is None and "longitudinal" in workflow_id:
+                print(f"\n-- skip: {workflow_id} --")
+                print(timepoints)
+                print(f"|-> need timepoints specification --")
+                continue
+            collect_config(
+                infra,
+                mod,
+                root.parent,
+                config_file,
+                dfs,
+                long_dfs,
+                timepoints,
+                workflow_id,
+                workflow_parameters,
+                workflow_resource,
+                image_dir,
+                image_version,
+                working_dir,
+                partition,
+                project_id,
+                freesurfer_license_file,
             )
-    for worflow_id, workflow_parameters in workflows.items():
-        if worflow_id not in allowed_workflows:
-            print(f"\n-- skip: {worflow_id} --")
-            continue
-        collect_config(
-            infra,
-            root.parent,
-            config_file,
-            dfs,
-            long_dfs,
-            worflow_id,
-            workflow_parameters,
-            workflow_resource,
-            image_dir,
-            image_version,
-            working_dir,
-            partition,
-            project_id,
-            freesurfer_license_file,
-        )
 
 
 def main():

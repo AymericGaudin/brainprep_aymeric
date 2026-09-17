@@ -27,6 +27,7 @@ from ..decorators import (
     LogRuntimeHook,
     OutputdirHook,
     PythonWrapperHook,
+    SignatureHook,
     step,
 )
 from ..typing import (
@@ -50,13 +51,15 @@ from .utils import (
             bunched=False
         ),
         CommandLineWrapperHook(),
+        SignatureHook(),
     ]
 )
-def cat12vbm_wf(
+def cat12vbm_workflow(
         t1_files: list[File],
         batch_file: File,
         output_dir: Directory,
-        entities: list[dict]) -> tuple[list[str], tuple[File | list[File]]]:
+        entities: list[dict],
+    ) -> tuple[list[str], tuple[File | list[File]]]:
     """
     Compute VBM prep-processing using CAT12.
 
@@ -85,17 +88,26 @@ def cat12vbm_wf(
     cat12_file = opts.get("cat12_file", DEFAULT_OPTIONS["cat12_file"])
     spm12_dir = opts.get("spm12_dir", DEFAULT_OPTIONS["spm12_dir"])
     matlab_dir = opts.get("matlab_dir", DEFAULT_OPTIONS["matlab_dir"])
+    longitudinal = len(t1_files) > 1
 
     output_dirs = [
         output_dir / f"ses-{info['ses']}"
         for info in entities
     ]
     gm_files = [
-        trg_dir / "mri" / f"mwp1{im_file.name.replace('.gz', '')}"
+        trg_dir / "mri" / (
+            f"mwp1r{im_file.name.replace('.gz', '')}"
+            if longitudinal
+            else f"mwp1{im_file.name.replace('.gz', '')}"
+        )
         for im_file, trg_dir in zip(t1_files, output_dirs, strict=True)
     ]
     qc_files = [
-        trg_dir / "report" / f"catreport_{im_file.name.replace('.gz', '')}"
+        trg_dir / "report" / (
+            f"catreport_r{im_file.name.replace('nii.gz', 'pdf')}"
+            if longitudinal
+            else f"catreport_{im_file.name.replace('nii.gz', 'pdf')}"
+        )
         for im_file, trg_dir in zip(t1_files, output_dirs, strict=True)
     ]
 
@@ -117,14 +129,16 @@ def cat12vbm_wf(
             bunched=False
         ),
         PythonWrapperHook(),
+        SignatureHook(),
     ]
 )
-def write_catbatch(
+def writebatch(
         t1_files: list[File],
         output_dir: Directory,
         entities: list[dict],
         model_long: int = 1,
-        dryrun: bool = False) -> tuple[File]:
+        dryrun: bool = False,
+    ) -> tuple[File]:
     """
     Generate CAT12 batch file.
 
@@ -139,9 +153,11 @@ def write_catbatch(
         image file.
     model_long : int
         Longitudinal model choice:1  short time (weeks), 2 long time (years)
-        between images sessions. Default 1.
+        between images sessions.
+        Default 1.
     dryrun : bool
-        If True, skip actual computation and file writing. Default False.
+        If True, skip actual computation and file writing.
+        Default False.
 
     Returns
     -------
@@ -176,7 +192,6 @@ def write_catbatch(
             f"ses-{entities[0]['ses']}" /
             f"cat12vbm_matlabbatch_run-{entities[0]['run']}.m"
         )
-        batch_file.parent.mkdir(parents=True, exist_ok=True)
         template_batch = (
             Path(__file__).parent.parent /
             "resources" /
@@ -186,6 +201,9 @@ def write_catbatch(
         output_dir / f"ses-{info['ses']}"
         for info in entities
     ]
+    batch_file.parent.mkdir(parents=True, exist_ok=True)
+    for output_dir in output_dirs:
+        output_dir.mkdir(exist_ok=True)
     unzip_t1_files = [
         trg_dir / im_file.name.replace(".gz", "")
         for im_file, trg_dir in zip(t1_files, output_dirs, strict=True)
@@ -221,14 +239,17 @@ def write_catbatch(
             morphometry=True
         ),
         LogRuntimeHook(
-            bunched=False
+            bunched=False,
+            parent=True
         ),
         PythonWrapperHook(),
+        SignatureHook(),
     ]
 )
 def cat12vbm_morphometry(
         output_dir: Directory,
-        dryrun: bool = False) -> list[File]:
+        dryrun: bool = False,
+    ) -> list[File]:
     """
     Extract ROI-based morphometry features and global tissue volumes from
     CAT12 VBM outputs.
@@ -245,7 +266,8 @@ def cat12vbm_morphometry(
     output_dir : Directory
         Working directory containing the outputs.
     dryrun : bool
-        If True, skip actual computation and file writing. Default False.
+        If True, skip actual computation and file writing.
+        Default False.
 
     Returns
     -------

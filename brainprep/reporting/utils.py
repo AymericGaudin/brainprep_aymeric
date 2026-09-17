@@ -24,8 +24,10 @@ from ..typing import (
 
 def inject_with_jinja(
         template_file: File,
-        **kwargs: Any) -> str:
-    """ Render Jinja template given context and write it to an output file.
+        **kwargs: Any,
+    ) -> str:
+    """
+    Render Jinja template given context and write it to an output file.
 
     Parameters
     ----------
@@ -50,8 +52,10 @@ def inject_with_jinja(
 def dataframe_to_html(
         df: pd.DataFrame,
         precision: int,
-        **kwargs: Any) -> str:
-    """ Make HTML table from provided dataframe.
+        **kwargs: Any,
+    ) -> str:
+    """
+    Make HTML table from provided dataframe.
 
     Removes HTML5 non-compliant attributes (ex: `border`).
 
@@ -76,8 +80,10 @@ def dataframe_to_html(
 
 
 def png_image_to_base64(
-        image_path: File) -> str:
-    """ Embed an image.
+        image_path: File,
+    ) -> str:
+    """
+    Embed an image.
 
     Parameters
     ----------
@@ -89,6 +95,7 @@ def png_image_to_base64(
     embed: str
         Binary image string.
     """
+    image_path = Path(image_path)
     assert image_path.suffix == ".png"
     encoded_string = base64.b64encode(
         image_path.read_bytes()

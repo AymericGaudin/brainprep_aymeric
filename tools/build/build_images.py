@@ -10,8 +10,6 @@
 Provide a command line interface to generate image build instructions.
 """
 
-import glob
-import os
 import shutil
 from pathlib import Path
 
@@ -96,7 +94,10 @@ def main(
         # Build command script
         cmds = [
             f"cd {dest_dir}",
-            f"sudo docker build --no-cache --tag brainprep-{name}:{version} .",
+            (
+                "sudo DOCKER_BUILDKIT=1 docker build --no-cache "
+                f"--tag brainprep-{name}:{version} ."
+            ),
             "sudo docker images",
             (
                 f"sudo docker save -o brainprep-{name}-v{version}.tar "
@@ -104,12 +105,12 @@ def main(
             ),
             f"sudo chmod 755 brainprep-{name}-v{version}.tar",
             (
-                f"sudo SINGULARITY_TMPDIR={tmp_dir} "
-                f"SINGULARITY_CACHEDIR={cache_dir} "
-                f"singularity build brainprep-{name}-v{version}.sif "
+                f"sudo APPTAINER_TMPDIR=$PWD/tmp "
+                f"APPTAINER_CACHEDIR=$PWD/cache "
+                f"apptainer build brainprep-{name}-v{version}.sif "
                 f"docker-archive://brainprep-{name}-v{version}.tar"
             ),
-            f"singularity inspect brainprep-{name}-v{version}.sif",
+            f"apptainer inspect brainprep-{name}-v{version}.sif",
         ]
 
         # Write commands file
