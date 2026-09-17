@@ -85,6 +85,9 @@ from .reporting import (
     parse_qa,
     parse_quasiraw,
 )
+from .synb0disco import (
+    synthb0,
+)
 from .tractseg import (
     tractseg_parcellation,
 )
@@ -148,6 +151,7 @@ __all__ = [
     "scale",
     "subject_level_qa",
     "sulcirec_metrics",
+    "synthb0",
     "tractseg_parcellation",
     "ungzfile",
     "vbm_metrics",

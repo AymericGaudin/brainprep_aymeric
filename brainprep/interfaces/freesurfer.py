@@ -58,6 +58,7 @@ def brainmask(
         image_file: File,
         output_dir: Directory,
         entities: dict,
+        legacy: bool = False,
     ) -> tuple[list[str], tuple[File]]:
     """
     Skull-strip a BIDS-compliant anatomical image using FreeSurfer's
@@ -76,6 +77,10 @@ def brainmask(
         Directory where the reoriented image will be saved.
     entities : dict
         A dictionary of parsed BIDS entities including modality.
+    legacy : bool
+        With old version the '-f: BG fill value, defaults to min(image.min, 0)'
+        is not available, the legacy mode adapt the command line accordingly.
+        Default False.
 
     Returns
     -------
@@ -100,9 +105,14 @@ def brainmask(
         "-i", str(image_file),
         "-o", str(brain_file),
         "-m", str(mask_file),
-        "-f", "0",
         "--no-csf",
     ]
+    if not legacy:
+        command.extend(
+            [
+                "-f", "0",
+            ]
+        )
 
     return command, (brain_file, mask_file, )
 

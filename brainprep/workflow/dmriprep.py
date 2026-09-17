@@ -77,7 +77,8 @@ def brainprep_dmriprep(
     t1_file : File
         Path to the input T1w image file.
     dwi_files : list[File]
-        Path to the input diffusion weighted image files of one subject.
+        Path to the input diffusion weighted image files of one subject. Must
+        be either two reverse phase encoding DWI images or a single DWI image.
     output_dir : Directory
         Directory where the prep-processing related outputs will be saved
         (i.e., the root of your dataset).
@@ -113,6 +114,7 @@ def brainprep_dmriprep(
     ------
     ValueError
         If the input T1w file is not BIDS-compliant.
+        If the input DWI files has length different than one or two.
 
     Notes
     -----
@@ -135,6 +137,28 @@ def brainprep_dmriprep(
     if len(entities) == 0:
         raise ValueError(
             f"The T1w file '{t1_file}' is not BIDS-compliant."
+        )
+
+    if len(dwi_files) not in (1, 2):
+        raise ValueError(
+            "DWI files must be either two reverse phase encoding DWI images "
+            "or a single DWI image."
+        )
+
+    if len(dwi_files) == 1:
+        _, mask_file = interfaces.brainmask(
+            t1_file,
+            workspace_dir / "01-brainmask",
+            entities,
+            legacy=True,
+        )
+        b0_file = interfaces.synthb0(
+            t1_file,
+            dwi_files[0],
+            workspace_dir / "02-synthb0",
+            output_dir,
+            entities,
+            mask_file,
         )
 
     (dwi_preproc_file, wm_fod_file, tractogram_file, mask_file,

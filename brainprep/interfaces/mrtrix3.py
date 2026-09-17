@@ -76,7 +76,7 @@ def dwiprep(
     workspace_dir: Directory
         Working directory with the workspace of the current processing.
     output_dir : Directory
-        Directory where the reoriented image will be saved.
+        Directory where the preprocessed data will be saved.
     entities : dict
         A dictionary of parsed BIDS entities including modality.
 
@@ -100,9 +100,11 @@ def dwiprep(
     rawdata_dir = workspace_dir / "rawdata"
     anat_dir = rawdata_dir / f"sub-{subject}" / f"ses-{session}" / "anat"
     dwi_dir = rawdata_dir / f"sub-{subject}" / f"ses-{session}" / "dwi"
+    fmap_dir = rawdata_dir / f"sub-{subject}" / f"ses-{session}" / "fmap"
     work_dir = workspace_dir / "work"
     preproc_scratch_dir = workspace_dir / "scratch" / "preproc"
     participant_scratch_dir = workspace_dir / "scratch" / "participant"
+    source_fmap_dir = output_dir / "fmap"
     transforms_dir = output_dir / "anat" / "transforms"
 
     for path in (
@@ -136,6 +138,8 @@ def dwiprep(
                     bval_source_file,
                     target_dir / bval_source_file.name,
                 )
+    if source_fmap_dir.is_dir() and not fmap_dir.is_symlink():
+        fmap_dir.symlink_to(source_fmap_dir)
 
     preproc_dir = work_dir / "MRtrix3_connectome-preproc"
     participant_dir = work_dir / "MRtrix3_connectome-participant"
