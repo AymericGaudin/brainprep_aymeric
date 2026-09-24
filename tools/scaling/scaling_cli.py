@@ -609,7 +609,7 @@ def collect_config(
     workflow_parameters = workflow_parameters.format_map(
         SafeDict({
             "mod_names": ",".join(set(dfs.keys()) - {"mod"}),
-            "outdir": working_dir / "derivatives",
+            "outdir": working_dir,
             "fsdir": working_dir / "derivatives" / "sbm"
         })
     )
