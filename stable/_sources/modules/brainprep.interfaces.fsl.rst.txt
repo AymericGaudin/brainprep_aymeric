@@ -1,0 +1,31 @@
+:mod:`brainprep.interfaces.fsl`: FSL functions.
+===============================================
+
+.. automodule:: brainprep.interfaces.fsl
+   :no-members:
+   :no-inherited-members:
+
+.. No relevant user manual section yet.
+
+
+
+Functions
+---------
+
+.. currentmodule:: brainprep.interfaces.fsl
+
+.. autosummary::
+   :toctree: generated/
+   :template: function.rst
+
+    align
+    applyaffine
+    applymask
+    deface
+    dtifit
+    reorient
+    scale
+
+
+
+

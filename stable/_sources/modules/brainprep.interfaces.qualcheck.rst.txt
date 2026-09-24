@@ -1,0 +1,34 @@
+:mod:`brainprep.interfaces.qualcheck`:  Quality check functions.
+================================================================
+
+.. automodule:: brainprep.interfaces.qualcheck
+   :no-members:
+   :no-inherited-members:
+
+.. No relevant user manual section yet.
+
+
+
+Functions
+---------
+
+.. currentmodule:: brainprep.interfaces.qualcheck
+
+.. autosummary::
+   :toctree: generated/
+   :template: function.rst
+
+    eulernums
+    fmriprep_metrics
+    maskdiff
+    maskoverlap
+    meancorr
+    mriqc_metrics
+    network_entropy
+    pca
+    sulcirec_metrics
+    vbm_metrics
+
+
+
+
