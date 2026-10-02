@@ -37,8 +37,8 @@ from ..typing import (
 )
 from ..utils import (
     coerce_to_path,
-    parse_bids_keys,
     compress_nii,
+    parse_bids_keys,
 )
 from .utils import (
     ungzfile,
@@ -421,7 +421,7 @@ def find_cat12_input_copy(
     ----------
     matlabbatch: File
         Path to the ready for execution CAT12 batch file
-    
+
     Returns
     -------
     input_copies: list[File]
@@ -431,8 +431,8 @@ def find_cat12_input_copy(
         matlabbatch = Path(matlabbatch)
     cat12_outdir = matlabbatch.parent
     input_copies = []
-    with open(matlabbatch, 'r') as file:
-        for line in file.readlines():
+    with open(matlabbatch) as file:
+        for line in file:
             if str(cat12_outdir) in line and ".nii" in line:
                 line = line.strip().strip("\'")
                 input_copies.append(Path(line.strip()))
@@ -444,21 +444,22 @@ def clean_cat12_outputs(
         gm_files: list[File],
     ) -> list[File]:
     """
-    Compress the nifti outputs produced by cat12 using nibabel, 
-    and remove the rawdata copy next to the matlabbatch file
-    
+    Compress the nifti outputs produced by cat12 using nibabel,
+    and remove the rawdata copy next to the matlabbatch file.
+
     Parameters
     ----------
     matlabbatch: File
-        Path to the ready for execution CAT12 batch file
+        Path to the ready for execution CAT12 batch file.
     gm_files: list[File]
-        Path to the modulated, normalized gray matter segmentations 
+        Path to the modulated, normalized gray matter segmentations
         outputed by cat12.
 
     Returns
     -------
     gm_files: list[File]
-        Updated paths to the mwp1 files (with .gz if they have been compressed).
+        Updated paths to the mwp1 files (with .gz if they have been
+        compressed).
     """
     niis = matlabbatch.parent.glob("mri/*.nii")
     for nii in niis:

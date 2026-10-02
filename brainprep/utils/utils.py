@@ -22,8 +22,8 @@ from typing import (
     get_origin,
 )
 
-import numpy as np
 import nibabel as nib
+import numpy as np
 
 from ..config import (
     DEFAULT_OPTIONS,
@@ -587,13 +587,13 @@ def compress_nii(
     mri_nii: str
         Image to compress. Must be a .nii.
     atol: float
-        Absolute tolerance for content comparison between the .nii 
+        Absolute tolerance for content comparison between the .nii
         and the generated .nii.gz
     clean_nii: bool, default True
         Set to True if you want to delete the .nii after they have
         been successfully compressed to .nii.gz.
     keep_both: str, default "both"
-        Set up the behavior when the .nii and the .nii.gz don't contain 
+        Set up the behavior when the .nii and the .nii.gz don't contain
         the same data.
         Set to "both" to keep both the .nii and the .nii.gz.
         Set to "orignal" to keep the .nii.
@@ -601,11 +601,12 @@ def compress_nii(
     """
     # save a copy as nii.gz
     if isinstance(mri_nii, str):
-        mri_niigz = mri_nii.replace('.nii','.nii.gz')
+        mri_niigz = mri_nii.replace('.nii', '.nii.gz')
     elif isinstance(mri_nii, Path):
         mri_niigz = mri_nii.with_suffix(".gz")
     else:
-        raise TypeError(f"'mri_nii' should be either str of Path, not {type(mri_nii)}")
+        raise TypeError("'mri_nii' should be either str of Path, "
+                        f"not {type(mri_nii)}")
     img_nii = nib.load(mri_nii)
     nib.save(img_nii, mri_niigz)
     # check the copy is good
@@ -621,8 +622,8 @@ def compress_nii(
             os.remove(mri_nii)
         return mri_niigz
     else:
-    # if copy not good, print a warning and keep files according
-    # to the keep argument
+        # if copy not good, print a warning and keep files according
+        # to the keep argument
         if not equal_affine:
             msg = f"Different affines for {mri_nii}."
         elif not similar_content:
