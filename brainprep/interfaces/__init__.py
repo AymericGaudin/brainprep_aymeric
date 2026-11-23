@@ -93,6 +93,7 @@ from .tractseg import (
 )
 from .utils import (
     anonfile,
+    compressfiles,
     copyfiles,
     htmlmin,
     movedir,
@@ -109,6 +110,7 @@ __all__ = [
     "brainmask",
     "cat12vbm_morphometry",
     "cat12vbm_workflow",
+    "compressfiles",
     "convertmgz",
     "copyfiles",
     "deface",

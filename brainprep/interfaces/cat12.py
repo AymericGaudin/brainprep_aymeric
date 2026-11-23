@@ -37,10 +37,10 @@ from ..typing import (
 )
 from ..utils import (
     coerce_to_path,
-    compress_nii,
     parse_bids_keys,
 )
 from .utils import (
+    compressfiles,
     ungzfile,
 )
 
@@ -444,7 +444,7 @@ def clean_cat12_outputs(
         gm_files: list[File],
     ) -> list[File]:
     """
-    Compress the nifti outputs produced by cat12 using nibabel,
+    Compress the nifti outputs produced by cat12 using gzip,
     and remove the rawdata copy next to the matlabbatch file.
 
     Parameters
@@ -461,18 +461,15 @@ def clean_cat12_outputs(
         Updated paths to the mwp1 files (with .gz if they have been
         compressed).
     """
-    niis = matlabbatch.parent.glob("mri/*.nii")
-    for nii in niis:
-        # compress
-        nii_gz = compress_nii(str(nii))
-        # replace by compressed image path
-        if nii in gm_files:
-            gm_files = [nii_gz if path == nii else path
-                        for path in gm_files]
     # remove the rawdata copy next to the matlabbatch file
     input_t1_copies = find_cat12_input_copy(matlabbatch)
     print(f"Found inputs (to delete): {input_t1_copies}")
-    for input_file in input_t1_copies:
-        os.remove(input_file)
-    print(gm_files)
-    return gm_files
+    if not dryrun:
+        for input_file in input_t1_copies:
+            os.remove(input_file)
+    # compress the mri outputs
+    compressfiles(output_dir, extensions=(".nii"))
+    gm_files = [
+        gm_file.parent / (gm_file.name + ".gz") for gm_file in gm_files
+    ]
+    return (gm_files, )

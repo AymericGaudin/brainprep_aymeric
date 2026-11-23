@@ -399,3 +399,61 @@ def htmlmin(
     ]
 
     return command, (input_file, )
+
+
+@step(
+    hooks=[
+        CoerceparamsHook(),
+        LogRuntimeHook(
+            bunched=False
+        ),
+        CommandLineWrapperHook(),
+        SignatureHook(),
+    ]
+)
+def compressfiles(
+        root_dir: Directory,
+        extensions: list[str] = (".nii", ),
+    ) -> list[str]:
+    """
+    Recursively scan a directory to compress specified neuroimaging files into
+    .gz.
+
+    Parameters
+    ----------
+    root_dir : Directory
+        Path to the root directory to scan.
+    extensions : list[str]
+        A list of file extensions to target for compression.
+        Default `(".nii", )`.
+    """
+    if not root_dir.is_dir():
+        raise ValueError(
+            f"The specified path is not a valid directory: {root_dir}"
+        )
+
+    clean_extensions = [
+        ext.lstrip(".")
+        for ext in extensions
+    ]
+
+    command = [
+        "find",
+        str(root_dir),
+        "-type", "f",
+        "(",
+    ]
+    for cnt, ext in enumerate(clean_extensions):
+        if cnt > 0:
+            command.append("-o")
+        command.extend([
+            "-name",
+            f"*.{ext}",
+        ])
+    command.extend([
+        ")",
+        "!", "-name", "*.gz",
+        "-exec", "gzip", "-v", "{}", ";",
+    ])
+
+    return command
