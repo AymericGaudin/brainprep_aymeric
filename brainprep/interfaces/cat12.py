@@ -407,11 +407,21 @@ def cat12vbm_morphometry(
 
     return (morphometry_files, )
 
-
+@step(
+    hooks=[
+        CoerceparamsHook(),
+        LogRuntimeHook(
+            bunched=False,
+        ),
+        PythonWrapperHook(),
+        SignatureHook(),
+    ]
+)
 def clean_cat12_outputs(
         t1_files: list[File],
         output_dir: Directory,
         gm_files: list[File],
+        dryrun: bool = False,
     ) -> list[File]:
     """
     Compress the nifti outputs produced by cat12 using gzip,

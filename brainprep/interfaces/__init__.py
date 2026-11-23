@@ -19,6 +19,7 @@ from .ants import (
 from .cat12 import (
     cat12vbm_morphometry,
     cat12vbm_workflow,
+    clean_cat12_outputs,
     writebatch,
 )
 from .fmriprep import (
@@ -110,6 +111,7 @@ __all__ = [
     "brainmask",
     "cat12vbm_morphometry",
     "cat12vbm_workflow",
+    "clean_cat12_outputs",
     "compressfiles",
     "convertmgz",
     "copyfiles",
