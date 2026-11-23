@@ -117,7 +117,8 @@ def brainprep_vbm(
     )
 
     gm_files = interfaces.clean_cat12_outputs(
-        batch_file,
+        [t1_file],
+        output_dir,
         gm_files,
     )
 

@@ -408,39 +408,9 @@ def cat12vbm_morphometry(
     return (morphometry_files, )
 
 
-def find_cat12_input_copy(
-        matlabbatch: File,
-    ) -> list[File]:
-    """
-    When running, CAT12 copies the image(s) it works on from rawdata as
-    uncompressed nifti next to the matlabbatch.
-    The goal of this function is to get the path of these copies from the
-    matlabbatch content.
-
-    Parameters
-    ----------
-    matlabbatch: File
-        Path to the ready for execution CAT12 batch file
-
-    Returns
-    -------
-    input_copies: list[File]
-        Files copied from rawdata and processed by cat12.
-    """
-    if isinstance(matlabbatch, str):
-        matlabbatch = Path(matlabbatch)
-    cat12_outdir = matlabbatch.parent
-    input_copies = []
-    with open(matlabbatch) as file:
-        for line in file:
-            if str(cat12_outdir) in line and ".nii" in line:
-                line = line.strip().strip("\'")
-                input_copies.append(Path(line.strip()))
-    return input_copies
-
-
 def clean_cat12_outputs(
-        matlabbatch: File,
+        t1_files: list[File],
+        output_dir: Directory,
         gm_files: list[File],
     ) -> list[File]:
     """
@@ -449,8 +419,10 @@ def clean_cat12_outputs(
 
     Parameters
     ----------
-    matlabbatch: File
-        Path to the ready for execution CAT12 batch file.
+    t1_files: list[File]
+        Path to the rawdata T1 files.
+    output_dir : Directory
+        Working directory containing the outputs.
     gm_files: list[File]
         Path to the modulated, normalized gray matter segmentations
         outputed by cat12.
@@ -462,7 +434,12 @@ def clean_cat12_outputs(
         compressed).
     """
     # remove the rawdata copy next to the matlabbatch file
-    input_t1_copies = find_cat12_input_copy(matlabbatch)
+    input_t1_copies = [
+        img for t1_file in t1_files
+        for img in glob.glob(
+            str(output_dir / f"*{t1_file.name.rstrip(".gz")}")
+        )
+    ]
     print(f"Found inputs (to delete): {input_t1_copies}")
     if not dryrun:
         for input_file in input_t1_copies:
