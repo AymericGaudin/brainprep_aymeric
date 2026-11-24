@@ -407,6 +407,7 @@ def cat12vbm_morphometry(
 
     return (morphometry_files, )
 
+
 @step(
     hooks=[
         CoerceparamsHook(),
@@ -419,7 +420,7 @@ def cat12vbm_morphometry(
 )
 def clean_cat12_outputs(
         t1_files: list[File],
-        output_dir: Directory,
+        output_dirs: list[Directory],
         gm_files: list[File],
         dryrun: bool = False,
     ) -> list[File]:
@@ -431,8 +432,9 @@ def clean_cat12_outputs(
     ----------
     t1_files: list[File]
         Path to the rawdata T1 files.
-    output_dir : Directory
-        Working directory containing the outputs.
+    output_dirs : list[Directory]
+        Working directories containing the outputs. They should be ordered as
+        t1_files.
     gm_files: list[File]
         Path to the modulated, normalized gray matter segmentations
         outputed by cat12.
@@ -445,7 +447,7 @@ def clean_cat12_outputs(
     """
     # remove the rawdata copy next to the matlabbatch file
     input_t1_copies = [
-        img for t1_file in t1_files
+        img for t1_file, output_dir in zip(t1_files, output_dirs, strict=True)
         for img in glob.glob(
             str(output_dir / f"*{t1_file.name.rstrip(".gz")}")
         )
@@ -455,7 +457,9 @@ def clean_cat12_outputs(
         for input_file in input_t1_copies:
             os.remove(input_file)
     # compress the mri outputs
-    compressfiles(output_dir, extensions=(".nii"))
+    if not dryrun:
+        for output_dir in output_dirs:
+            compressfiles(output_dir / "mri", extensions=(".nii"))
     gm_files = [
         gm_file.parent / (gm_file.name + ".gz") for gm_file in gm_files
     ]

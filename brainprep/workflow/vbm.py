@@ -118,7 +118,7 @@ def brainprep_vbm(
 
     gm_files = interfaces.clean_cat12_outputs(
         [t1_file],
-        output_dir,
+        [output_dir],
         gm_files,
     )
 
@@ -229,8 +229,10 @@ def brainprep_longitudinal_vbm(
         entities,
     )
 
+    output_dirs = [gm_file.parent.parent for gm_file in gm_files]
     gm_files = interfaces.clean_cat12_outputs(
-        batch_file,
+        t1_files,
+        output_dirs,
         gm_files,
     )
 
@@ -385,7 +387,7 @@ def brainprep_group_vbm(
     )
 
     correlations_file = interfaces.meancorr(
-        output_dir / "subjects" / "sub-*" / "ses-*" / "mri" / "wm*_T1w.nii",
+        output_dir / "subjects" / "sub-*" / "ses-*" / "mri" / "wm*_T1w.nii.gz",
         darteltpm_file,
         output_dir,
         correlation_threshold,
