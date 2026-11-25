@@ -431,6 +431,16 @@ def compressfiles(
         Regex to select files inside root_dir. It needs to be understandable
         by `find`.
         Default `"*"`.
+
+    Returns
+    -------
+    command: list[str]
+        Command to execute.
+
+    Raises
+    ------
+    ValueError
+        If root_dir is not a directory.
     """
     if not root_dir.is_dir():
         raise ValueError(

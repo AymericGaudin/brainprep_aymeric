@@ -438,6 +438,8 @@ def clean_cat12_outputs(
     gm_files: list[File]
         Path to the modulated, normalized gray matter segmentations
         outputed by cat12.
+    dryrun: bool
+        If True, skip file compression and deletion.
 
     Returns
     -------
