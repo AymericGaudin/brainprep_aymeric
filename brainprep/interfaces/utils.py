@@ -414,6 +414,7 @@ def htmlmin(
 def compressfiles(
         root_dir: Directory,
         extensions: list[str] = (".nii", ),
+        filename_regex: str = "*",
     ) -> list[str]:
     """
     Recursively scan a directory to compress specified neuroimaging files into
@@ -426,6 +427,10 @@ def compressfiles(
     extensions : list[str]
         A list of file extensions to target for compression.
         Default `(".nii", )`.
+    filename_regex: str
+        Regex to select files inside root_dir. It needs to be understandable
+        by `find`.
+        Default `"*"`.
     """
     if not root_dir.is_dir():
         raise ValueError(
@@ -448,7 +453,7 @@ def compressfiles(
             command.append("-o")
         command.extend([
             "-name",
-            f"*.{ext}",
+            f"{filename_regex}.{ext}",
         ])
     command.extend([
         ")",

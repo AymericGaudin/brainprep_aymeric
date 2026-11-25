@@ -458,8 +458,12 @@ def clean_cat12_outputs(
             os.remove(input_file)
     # compress the mri outputs
     if not dryrun:
-        for output_dir in output_dirs:
-            compressfiles(output_dir / "mri", extensions=(".nii"))
+        for t1_file, output_dir in zip(t1_files, output_dirs, strict=True):
+            compressfiles(
+                output_dir / "mri",
+                extensions=(".nii"),
+                filename_regex=f"*{t1_file.name.removesuffix(".gz").removesuffix(".nii")}"
+            )
     gm_files = [
         gm_file.parent / (gm_file.name + ".gz") for gm_file in gm_files
     ]
