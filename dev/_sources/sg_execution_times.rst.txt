@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:34.937** total execution time for 10 files **from all galleries**:
+**00:29.853** total execution time for 10 files **from all galleries**:
 
 .. container::
 
@@ -33,32 +33,32 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_workflows_plot_quality_assurance.py` (``../examples/workflows/plot_quality_assurance.py``)
-     - 00:20.216
-     - 599.7
+     - 00:15.371
+     - 600.7
    * - :ref:`sphx_glr_auto_examples_workflows_plot_defacing.py` (``../examples/workflows/plot_defacing.py``)
-     - 00:06.034
-     - 156.3
+     - 00:06.818
+     - 149.2
    * - :ref:`sphx_glr_auto_examples_workflows_plot_sbm.py` (``../examples/workflows/plot_sbm.py``)
-     - 00:03.827
-     - 144.9
+     - 00:02.558
+     - 143.6
    * - :ref:`sphx_glr_auto_examples_tutorials_plot_iqms.py` (``../examples/tutorials/plot_iqms.py``)
-     - 00:01.180
-     - 130.6
+     - 00:01.368
+     - 130.0
    * - :ref:`sphx_glr_auto_examples_workflows_plot_quasiraw.py` (``../examples/workflows/plot_quasiraw.py``)
-     - 00:00.950
-     - 116.1
-   * - :ref:`sphx_glr_auto_examples_tools_plot_html_reporting.py` (``../examples/tools/plot_html_reporting.py``)
-     - 00:00.644
-     - 119.2
+     - 00:01.050
+     - 114.9
    * - :ref:`sphx_glr_auto_examples_workflows_plot_vbm.py` (``../examples/workflows/plot_vbm.py``)
-     - 00:00.602
-     - 116.1
+     - 00:00.648
+     - 114.9
    * - :ref:`sphx_glr_auto_examples_workflows_plot_fmriprep.py` (``../examples/workflows/plot_fmriprep.py``)
-     - 00:00.573
-     - 116.1
+     - 00:00.639
+     - 114.9
    * - :ref:`sphx_glr_auto_examples_workflows_plot_sulcirec.py` (``../examples/workflows/plot_sulcirec.py``)
-     - 00:00.514
-     - 116.1
+     - 00:00.541
+     - 114.9
    * - :ref:`sphx_glr_auto_examples_tools_plot_rst_reporting.py` (``../examples/tools/plot_rst_reporting.py``)
-     - 00:00.397
-     - 116.9
+     - 00:00.437
+     - 115.7
+   * - :ref:`sphx_glr_auto_examples_tools_plot_html_reporting.py` (``../examples/tools/plot_html_reporting.py``)
+     - 00:00.423
+     - 117.7

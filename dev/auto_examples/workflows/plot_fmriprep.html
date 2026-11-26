@@ -813,23 +813,24 @@ sub-01/ses-00'),
 )
 [warn] - To avoid paths that are too long and not allowed by FreeSurfer, we use
 the '/tmp' directory. To prevent data leakage, please bind '/tmp' to a secure
-location. Current temporary directory: /tmp/tmpizd6qnmu.
-[command] - cp -r /my/freesurfer/directory/sub-01
+location. Current temporary directory: /tmp/tmpvj0a3spg.
+[command] - cp -r /my/freesurfer/directory/sub-01/ses-00/run-28236
 /tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/fr
 eesurfer/sub-01_ses-00
 [command] - fmriprep
 /tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/ra
 wdata /tmp/brainprep-fmriprep/derivatives/fmriprep/subjects participant
---notrack --skip-bids-validation --stop-on-first-crash --n-cpus 4
---fs-license-file /freesurfer/home/license.txt --fs-subjects-dir
+--notrack --random-seed 42 --skip-bids-validation --skull-strip-fixed-seed
+--omp-nthreads 1 --n-cpus 4 --stop-on-first-crash --fs-license-file
+/freesurfer/home/license.txt --fs-subjects-dir
 /tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/fr
-eesurfer --work-dir /tmp/tmpizd6qnmu/work --fs-no-resume --force bbr syn-sdc
---no-msm --cifti-output 91k --output-spaces T1w MNI152NLin2009cAsym
-MNI152NLin2009cAsym:res-2 fsnative fsLR --ignore slicetiming --participant-label
-01
-[command] - cp -r /tmp/tmpizd6qnmu/work
+eesurfer --fs-no-resume --work-dir /tmp/tmpvj0a3spg/work --level full --force
+bbr syn-sdc --no-msm --cifti-output 91k --output-spaces T1w
+MNI152NLin2009cAsym:res-2 fsnative fsLR:den-32k --ignore slicetiming
+--participant-label 01 -vv
+[command] - cp -r /tmp/tmpvj0a3spg/work
 /tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace
-[command] - rm -r /tmp/tmpizd6qnmu
+[command] - rm -r /tmp/tmpvj0a3spg
 [info] - checking output:
 /tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_
 ses-00_task-ArchiStandard_dir-pa_space-T1w_desc-brain_mask.nii.gz
@@ -858,7 +859,7 @@ ses-00_task-ArchiStandard_dir-pa_space-fsLR_den-91k_bold.dtseries.nii
 ses-00_task-ArchiStandard_dir-pa_desc-confounds_timeseries.tsv
 [info] - checking output:
 /tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01.html
-__________________________________________________________________0.08s, 0.00min
+__________________________________________________________________0.10s, 0.00min
 [warn] - BIDS file name does not contain run key:
 sub-01_ses-00_task-ArchiStandard_dir-pa_bold.nii.gz
 [warn] - BIDS file name does not contain run key:
@@ -952,7 +953,7 @@ sub-01/ses-00/figures'),
 orrelation_connectivity.png
 __________________________________________________________________0.00s, 0.00min
 [title] - Subject Level fMRI PreProcessing done.
-__________________________________________________________________0.10s, 0.00min
+__________________________________________________________________0.13s, 0.00min
 Bunch(
   step1: Bunch(
     module: 'brainprep.workflow.fmriprep.brainprep_fmriprep'
@@ -972,9 +973,9 @@ Bunch(
       connectivity_files: [PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/figures/sub-01_ses-00_task-rest_run-39767_space-MNI152NLin2009cAsym_atlas-schaefer200_desc-correlation_connectivity.tsv')]
     )
     runtime: Bunch(
-      start: '2026-11-26 14:24:02.016196'
-      end: '2026-11-26 14:24:02.119640'
-      execution_time: 2.8734444444444443e-05
+      start: '2026-11-26 16:21:06.708321'
+      end: '2026-11-26 16:21:06.837132'
+      execution_time: 3.5780833333333335e-05
       brainprep_version: '2.2.0.dev'
       platform: 'Linux-7.0.0-1020-azure-x86_64-with-glibc2.43'
       hostname: 'runnervm0hi8g'
@@ -1007,12 +1008,12 @@ Bunch(
       entities: {'sub': '01', 'ses': '00', 'modality': 'T1w', 'mod': 'T1w', 'run': '28236'}
     )
     outputs: Bunch(
-      outputs: ([['cp', '-r', '/my/freesurfer/directory/sub-01', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/freesurfer/sub-01_ses-00'], ['fmriprep', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/rawdata', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects', 'participant', '--notrack', '--skip-bids-validation', '--stop-on-first-crash', '--n-cpus', '4', '--fs-license-file', '/freesurfer/home/license.txt', '--fs-subjects-dir', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/freesurfer', '--work-dir', '/tmp/tmpizd6qnmu/work', '--fs-no-resume', '--force', 'bbr', 'syn-sdc', '--no-msm', '--cifti-output', '91k', '--output-spaces', 'T1w', 'MNI152NLin2009cAsym', 'MNI152NLin2009cAsym:res-2', 'fsnative', 'fsLR', '--ignore', 'slicetiming', '--participant-label', '01'], ['cp', '-r', '/tmp/tmpizd6qnmu/work', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace'], ['rm', '-r', '/tmp/tmpizd6qnmu']], ([[[PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-T1w_desc-brain_mask.nii.gz'), PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz')], [PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-T1w_desc-preproc_bold.nii.gz'), PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz')], [(PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_hemi-L_space-fsnative_bold.func.gii'),), (PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_hemi-R_space-fsnative_bold.func.gii'),), (PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-fsLR_den-91k_bold.dtseries.nii'),)], PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_desc-confounds_timeseries.tsv')]], PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01.html')))
+      outputs: ([['cp', '-r', '/my/freesurfer/directory/sub-01/ses-00/run-28236', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/freesurfer/sub-01_ses-00'], ['fmriprep', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/rawdata', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects', 'participant', '--notrack', '--random-seed', '42', '--skip-bids-validation', '--skull-strip-fixed-seed', '--omp-nthreads', '1', '--n-cpus', '4', '--stop-on-first-crash', '--fs-license-file', '/freesurfer/home/license.txt', '--fs-subjects-dir', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace/freesurfer', '--fs-no-resume', '--work-dir', '/tmp/tmpvj0a3spg/work', '--level', 'full', '--force', 'bbr', 'syn-sdc', '--no-msm', '--cifti-output', '91k', '--output-spaces', 'T1w', 'MNI152NLin2009cAsym:res-2', 'fsnative', 'fsLR:den-32k', '--ignore', 'slicetiming', '--participant-label', '01', '-vv'], ['cp', '-r', '/tmp/tmpvj0a3spg/work', '/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/workspace'], ['rm', '-r', '/tmp/tmpvj0a3spg']], ([[[PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-T1w_desc-brain_mask.nii.gz'), PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz')], [PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-T1w_desc-preproc_bold.nii.gz'), PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz')], [(PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_hemi-L_space-fsnative_bold.func.gii'),), (PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_hemi-R_space-fsnative_bold.func.gii'),), (PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_space-fsLR_den-91k_bold.dtseries.nii'),)], PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/func/sub-01_ses-00_task-ArchiStandard_dir-pa_desc-confounds_timeseries.tsv')]], PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01.html')))
     )
     runtime: Bunch(
-      start: '2026-11-26 14:24:02.023408'
-      end: '2026-11-26 14:24:02.099607'
-      execution_time: 2.116638888888889e-05
+      start: '2026-11-26 16:21:06.715728'
+      end: '2026-11-26 16:21:06.811042'
+      execution_time: 2.647611111111111e-05
       brainprep_version: '2.2.0.dev'
       platform: 'Linux-7.0.0-1020-azure-x86_64-with-glibc2.43'
       hostname: 'runnervm0hi8g'
@@ -1057,9 +1058,9 @@ Bunch(
       outputs: (PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/figures/sub-01_ses-00_task-rest_run-39767_space-MNI152NLin2009cAsym_atlas-schaefer200_desc-correlation_connectivity.tsv'),)
     )
     runtime: Bunch(
-      start: '2026-11-26 14:24:02.109581'
-      end: '2026-11-26 14:24:02.112833'
-      execution_time: 9.033333333333334e-07
+      start: '2026-11-26 16:21:06.824367'
+      end: '2026-11-26 16:21:06.829505'
+      execution_time: 1.4272222222222223e-06
       brainprep_version: '2.2.0.dev'
       platform: 'Linux-7.0.0-1020-azure-x86_64-with-glibc2.43'
       hostname: 'runnervm0hi8g'
@@ -1092,9 +1093,9 @@ Bunch(
       outputs: (PosixPath('/tmp/brainprep-fmriprep/derivatives/fmriprep/subjects/sub-01/ses-00/figures/sub-01_ses-00_task-rest_run-39767_space-MNI152NLin2009cAsym_atlas-schaefer200_desc-correlation_connectivity.png'),)
     )
     runtime: Bunch(
-      start: '2026-11-26 14:24:02.117153'
-      end: '2026-11-26 14:24:02.119022'
-      execution_time: 5.191666666666666e-07
+      start: '2026-11-26 16:21:06.833353'
+      end: '2026-11-26 16:21:06.836209'
+      execution_time: 7.933333333333333e-07
       brainprep_version: '2.2.0.dev'
       platform: 'Linux-7.0.0-1020-azure-x86_64-with-glibc2.43'
       hostname: 'runnervm0hi8g'
@@ -1165,8 +1166,8 @@ In practice, this means that once the CLI has produced the appropriate
 instructions, you can simply copy and run them inside the container to
 achieve the intended results. You can find the BrainPrep images on Docker
 Hub: <a class="reference external" href="https://hub.docker.com/u/neurospin">Neurospin Docker Hub</a>.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.573 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  116 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.639 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  115 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-workflows-plot-fmriprep-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/587106adc91da25d9cf869d5446eaa39/plot_fmriprep.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_fmriprep.ipynb</span></code></a></p>
